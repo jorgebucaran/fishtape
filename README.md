@@ -24,7 +24,7 @@ curl -L git.io/getgo | sh
 
 <br>
 
-# Bells and Whistles
+## Bells and Whistles
 
 ## `GOROOT`
 Set `GOROOT` to your preferred location, e.g., `$HOME/.go`, `/usr/lib/go`, etc. Installs to `/usr/local/go` by default.
