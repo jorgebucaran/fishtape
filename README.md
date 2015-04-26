@@ -7,8 +7,6 @@
 </a>
 <a href="https://blog.golang.org/gopher"><img width="4%" src="img/gopher.png"></a>
 
-> _Get [go](https://golang.org) in just one go._
-
 <br>
 
 <p align="center">
