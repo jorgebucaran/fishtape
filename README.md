@@ -2,10 +2,6 @@
 ![](https://img.shields.io/badge/license-CC0-333333.svg?style=flat-square)
 </a>
 ![](https://img.shields.io/badge/release-0.1.0-blue.svg?style=flat-square)
-<a href="#tldr">
-![](https://img.shields.io/badge/tl-dr-brightgreen.svg?style=flat-square)
-</a>
-<a href="https://blog.golang.org/gopher"><img width="4%" src="img/gopher.png"></a>
 
 <br>
 
