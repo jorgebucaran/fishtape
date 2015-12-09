@@ -4,7 +4,7 @@ set -g __fishtape_fails 0
 
 for var  in (set --global --name)
   switch $var
-    case _\* version umask status history COLUMNS FISH_VERSION LINES PWD SHLVL
+    case _\* version umask status history COLUMNS FISH_VERSION LINES PWD SHLVL PATH TMUX
     case \*
       set -g __fishtape_$var $$var
   end
