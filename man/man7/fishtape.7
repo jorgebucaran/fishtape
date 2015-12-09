@@ -1,0 +1,120 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "FISHTAPE" "7" "December 2015" "" "fishtape"
+.
+.SH "NAME"
+\fBfishtape\fR \- A tutorial introduction to Fishtape
+.
+.SH "What is TAP?"
+TAP, the test anything protocol, is a text\-based format for communication between unit tests and a test harness\. Fishtape is a TAP producer and test harness, it will run tests written in fish and produce a TAP stream\. This stream can be piped into a TAP\-consumer, for example a TAP reporter\.
+.
+.SH "Writing Tests"
+Test files are regular fish files with one or more \fBtest blocks\fR\. A test block consists of an optional description and any test expression supported by \fBtest(1)\fR\.
+.
+.IP "" 4
+.
+.nf
+
+test
+  ok = ok
+end
+
+test "status check"
+  (true) $status \-eq 0
+end
+
+test "math still works"
+  (math 1+1) = 2
+end
+
+test "list contains word"
+  word = a b word c d
+end
+
+test "list contains multiple words"
+  word1 word2 word3 = a b word1 c d word2 e f word3 g h
+end
+.
+.fi
+.
+.IP "" 0
+.
+.P
+To run \fBtest\.fish\fR:
+.
+.IP "" 4
+.
+.nf
+
+`fishtape path/to/*\.fish`
+.
+.fi
+.
+.IP "" 0
+.
+.SH "Evaluating Tests"
+Fishtape reads the specified files, or the standard input if no files are given, and converts \fBtest blocks\fR into valid fish syntax which can be evaluated\. If you attempt to \fBsource test\.fish\fR or \fBfish \-c test\.fish\fR fish will throw an error\.
+.
+.P
+Each test block is converted to a single \fBtest\fR call and only one expression is allowed per block\.
+.
+.P
+The preprocess stage generates valid syntax, adds a small runtime with helper functions and local variables \fBFILENAME\fR, \fBDIRNAME\fR and \fBTESTNAME\fR at the top of the file\. See \fBfishtape(1)\fR\.
+.
+.SH "Scope"
+Each test file is wrapped in \fBbegin; end\fR blocks behind the scenes to protect your local scope\. Also, after each test, global variables are restored to their initial value at the time of running \fBfishtape\fR\.
+.
+.P
+This means you can safely modify global variables during \fBsetup\fR without affecting other test files\.
+.
+.IP "" 4
+.
+.nf
+
+# my_app/tests/sync\.fish
+
+function setup
+  set \-g my_remote file:///remote_mock/\.git
+end
+
+test "sync app with remote origin"
+  0 = (my_app sync; echo $status)
+end
+
+# my_app/tests/other\.fish
+
+test "remote is a url"
+  echo $my_remote | grep \'^https://\'
+end
+.
+.fi
+.
+.IP "" 0
+.
+.P
+You can still share global variables if you need to by prepending a `_\' to the variable name\.
+.
+.IP "" 4
+.
+.nf
+
+set \-g _secret 42
+.
+.fi
+.
+.IP "" 0
+.
+.SH "SEE ALSO"
+.
+.IP "\(bu" 4
+fishtape(1)
+.
+.IP "\(bu" 4
+http://testanything\.org/
+.
+.IP "\(bu" 4
+https://en\.wikipedia\.org/wiki/Test_Anything_Protocol
+.
+.IP "" 0
+
