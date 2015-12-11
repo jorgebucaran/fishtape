@@ -29,11 +29,11 @@ $(FILE): $(SOURCE) VERSION
 
 install: $(FILE)
 	mkdir -p $(FUNC_HOME) && cp -f $^ $(FUNC_HOME)
-	@$(call MESSAGE,DONE. Run '$(NAME) --help' or 'make doc' to build the man page.)
+	@$(call MESSAGE,Run '$(NAME) --help' or 'make doc' to build the man page)
 
 uninstall:
 	rm -f $(FUNC_HOME)/$(FILE)
-	@$(call MESSAGE,DONE. Run 'functions -e $(NAME)' to completely remove $(NAME))
+	@$(call MESSAGE,Run 'functions -e $(NAME)' to complete uninstall)
 
 clean:
 	rm -f $(FILE) $(FILE).tmp
