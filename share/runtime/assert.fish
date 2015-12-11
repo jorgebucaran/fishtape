@@ -17,8 +17,8 @@ function fishtape_assert
     end
   end | read -l index
 
-  switch $index
-    case 1 $count
+  switch "$index"
+    case "" 1 $count
       return 1
   end
 
