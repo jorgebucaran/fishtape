@@ -1,6 +1,6 @@
 <p align="center">
   <a href="http://github.com/fisherman/fishtape">
-    <img alt="Fishtape" width=300px  src="https://cloud.githubusercontent.com/assets/8317250/11807976/c55f0f7c-a360-11e5-8518-b5641442bff3.png">
+    <img alt="Fishtape" width=460px  src="https://cloud.githubusercontent.com/assets/8317250/11807976/c55f0f7c-a360-11e5-8518-b5641442bff3.png">
   </a>
 </p>
 
@@ -19,7 +19,12 @@ cd fishtape
 make install
 ```
 
-See [wiki][wiki] for more install options.
+With [Fisherman][fisherman]:
+
+```fish
+fisher install fishtape
+```
+
 
 ## Usage
 
@@ -58,21 +63,6 @@ Fishtape reads the specified files, or the standard input if no files are given,
 fishtape path/to/tests/*.fish
 ```
 
-### Microbenchmarks
-
-You can measure average execution speed between functions and/or other utilities using `--time=<function>[,...]`.
-
-This can be useful when trying to compare two or more ways to do the same thing, and we want to see which one is possibly faster.
-
-```fish
-fishtape --time=func{1,2,3}
-```
-
-Fishtape will use any available standard input for arguments when invoking each of the given functions:
-
-```fish
-fishtape --time=bubble,heap,qsort < numbers
-```
 
 ## Help
 
