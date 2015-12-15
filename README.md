@@ -1,12 +1,25 @@
-<br>
 <div align="center">
   <a href="http://github.com/fisherman/fishtape">
-    <img width=350px  src="https://cloud.githubusercontent.com/assets/8317250/11613543/30c17c3c-9c68-11e5-8432-d321b2296e0a.png">
+    <img width=260px  src="https://cloud.githubusercontent.com/assets/8317250/11807976/c55f0f7c-a360-11e5-8518-b5641442bff3.png">
   </a>
 </div>
 
+<p align="center">
+  <b><a href="#about">About</a></b>
+  |
+  <b><a href="#install">Install</a></b>
+  |
+  <b><a href="#contributing">Usage</a></b>
+  |
+  <b><a href="#help">Help</a></b>
+</p>
 
-[![][travis-badge]][travis-link]
+<p align="center">
+  <a href="https://travis-ci.org/fisherman/fishtape">
+    <img src="https://img.shields.io/travis/fisherman/fishtape.svg?style=flat-square">
+  </a>
+</p>
+
 
 ## About
 
@@ -84,7 +97,7 @@ cd fishtape
 make doc
 ```
 
-See [`fishtape(1)`][fishtape-1] and [`fishtape(7)`][fishtape-7]. For questions and feedback join us at the [Wharf][wharf] or browse the [issue][issues] tracker.
+See [`fishtape(1)`][fishtape-1] and [`fishtape(7)`][fishtape-7]. For questions and feedback join the [Gitter room][wharf] or browse the [issues][issues].
 
 
 <!-- Links -->
@@ -96,5 +109,3 @@ See [`fishtape(1)`][fishtape-1] and [`fishtape(7)`][fishtape-7]. For questions a
 [fishtape-1]:   man/man1/fishtape.md
 [fishtape-7]:   man/man7/fishtape.md
 [fisherman]:    http://github.com/fisherman/fisherman
-[travis-link]:  https://travis-ci.org/fisherman/fishtape
-[travis-badge]: https://img.shields.io/travis/fisherman/fishtape.svg?style=flat-square
