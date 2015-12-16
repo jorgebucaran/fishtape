@@ -3,7 +3,7 @@ test "one is zero"
 end
 
 test "nothing is something"
-  -n
+  -n ""
 end
 
 test "inline comments" # sure

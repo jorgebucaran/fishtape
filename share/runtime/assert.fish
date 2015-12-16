@@ -4,7 +4,7 @@ function fishtape_assert
   if test $count -le 3
     switch "$argv[1]"
       case -n
-        set -q argv[2]
+        not test -z "$argv[2]"
       case \*
         test $argv
     end

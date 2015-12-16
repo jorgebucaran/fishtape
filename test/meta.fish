@@ -43,7 +43,7 @@ end
 test "$TESTNAME: -n argument expects argument"
   (printf "%s\n" $meta \
     | sed -n '8,13p' \
-    | xargs) = "not ok 2 nothing is something --- operator: fail expected: argv > 1 received: -n ..."
+    | xargs) = "not ok 2 nothing is something --- operator: -n expected: a non-zero length string received:  ..."
 end
 
 test "$TESTNAME: display program help"
