@@ -1,6 +1,6 @@
 <p align="center">
   <a href="http://github.com/fisherman/fishtape">
-    <img alt="Fishtape" width=420px  src="https://cloud.githubusercontent.com/assets/8317250/11809776/879a9290-a36c-11e5-92a2-1a0d4d52d753.png">
+    <img alt="Fishtape" width=450px  src="https://cloud.githubusercontent.com/assets/8317250/11807851/f76839a4-a35f-11e5-9ed8-a77604fbd546.png">
   </a>
 </p>
 
