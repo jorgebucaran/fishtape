@@ -4,13 +4,16 @@
 .TH "FISHTAPE" "7" "December 2015" "" "fishtape"
 .
 .SH "NAME"
-\fBfishtape\fR \- A tutorial introduction to Fishtape
+\fBfishtape\fR \- An Introduction to Fishtape
 .
-.SH "What is TAP?"
+.SH "WHAT IS TAP?"
 TAP, the test anything protocol, is a text\-based format for communication between unit tests and a test harness\. Fishtape is a TAP producer and test harness, it will run tests written in fish and produce a TAP stream\. This stream can be piped into a TAP\-consumer, for example a TAP reporter\.
 .
-.SH "Writing Tests"
-Test files are regular fish files with one or more \fBtest blocks\fR\. A test block consists of an optional description and any test expression supported by \fBtest(1)\fR\.
+.SH "WHAT IS FISHTAPE?"
+\fIFishtape\fR is a TAP producer and test harness for fish\. A test harness is responsible for running your test from multiple files and generating a test report\. In this case, harness is analogous to framework\.
+.
+.SH "WRITING TESTS"
+Test files are fish files with one or more \fItest blocks\fR\. A test block consists of a description (optional) and a test expression supported by \fBtest\fR(1)\.
 .
 .IP "" 4
 .
@@ -47,22 +50,22 @@ To run \fBtest\.fish\fR:
 .
 .nf
 
-`fishtape path/to/*\.fish`
+fishtape path/to/*\.fish
 .
 .fi
 .
 .IP "" 0
 .
-.SH "Evaluating Tests"
-Fishtape reads the specified files, or the standard input if no files are given, and converts \fBtest blocks\fR into valid fish syntax which can be evaluated\. If you attempt to \fBsource test\.fish\fR or \fBfish \-c test\.fish\fR fish will throw an error\.
+.SH "EVALUATION"
+Fishtape reads any number of files, or the standard input if no files are given, and converts test blocks into valid fish syntax which is then evaluated\. If you try to \fBsource test\.fish\fR or \fBfish \-c test\.fish\fR fish will throw an error\.
 .
 .P
 Each test block is converted to a single \fBtest\fR call and only one expression is allowed per block\.
 .
 .P
-The preprocess stage generates valid syntax, adds a small runtime with helper functions and local variables \fBFILENAME\fR, \fBDIRNAME\fR and \fBTESTNAME\fR at the top of the file\. See \fBfishtape(1)\fR\.
+The preprocess stage generates valid syntax, adds a small runtime with helper functions and local variables \fBFILENAME\fR, \fBDIRNAME\fR and \fBTESTNAME\fR at the top of the file\. See \fBfishtape\fR(1)\.
 .
-.SH "Scope"
+.SH "SCOPE"
 Each test file is wrapped in \fBbegin; end\fR blocks behind the scenes to protect your local scope\. Also, after each test, global variables are restored to their initial value at the time of running \fBfishtape\fR\.
 .
 .P
@@ -93,7 +96,7 @@ end
 .IP "" 0
 .
 .P
-You can still share global variables if you need to by prepending a `_\' to the variable name\.
+You can still share global variables if you must to, by prepending an underscore "\fB_\fR" to the variable name\.
 .
 .IP "" 4
 .

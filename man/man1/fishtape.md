@@ -3,23 +3,23 @@ fishtape(1) -- TAP producer and test harness for fish
 
 ## SYNOPSIS
 
-`fishtape [<file> ...]`<br>
-`fishtape [--time=<utility[,...]>] [--pipe=<utility>]`<br>
-`fishtape [--help] [--version]`<br>
+`fishtape` [*file* ...]<br>
+`fishtape` [`--time`=*utility*[,...]] [`--pipe`=*utility*]<br>
+`fishtape` [`--help`] [`--version`]<br>
 
 ## DESCRIPTION
 
-**Fishtape** is a TAP (Test Anything Protocol) producer and test harness for fish. **Fishtape** reads the specified files, or the standard input if no files are given, and executes any __test blocks__ it finds producing a TAP stream.
+*Fishtape* is a TAP (Test Anything Protocol) producer and test harness for fish. Fishtape reads the specified files, or the standard input if no files are given, and executes *test blocks* producing a TAP stream.
 
 This utility also provides a simple mechanism for creating microbenchmarks to measure average utility execution speed.
 
 ## OPTIONS
 
-  * `-t`, `--time=<utility>[,...]`:
+  * `-t`, `--time`=*utility*[,...]:
     Benchmark given <utility> and/or functions.
 
-  * `-p`, `--pipe=<utility>`:
-    Pipe line buffered output into given <utility>.
+  * `-p`, `--pipe`=*utility*:
+    Pipe line buffered output into given *utility*.
 
   * `-v`, `--version`:
     Show version information.
@@ -27,12 +27,9 @@ This utility also provides a simple mechanism for creating microbenchmarks to me
   * `-h`, `--help`:
     Show help information.
 
-  * `--path=<helpers path>`:
-    Use given <path> to locate preprocessor helpers. **Internal use.**
-
 ## EXAMPLES
 
-Test files are fish files with one or more __test blocks__. A test block consists of an optional description and any test expression supported by `test(1)`.
+Test files are fish files with one or more test blocks. A test block consists of an optional description and any test expression supported by `test`(1).
 
     test "current directory is home"
       $HOME = $DIRNAME
@@ -61,7 +58,7 @@ The general syntax is:
       <expression>
     end
 
-Where `<expression>` is any `test(1)` valid expression; in addition, `=` and `!=` operators are overloaded to check for item inclusion or exclusion in lists.
+Where *expression* is any `test`(1) valid expression; in addition, `=` and `!=` operators are overloaded to check for item inclusion or exclusion in lists.
 
     test "this sentence contains the word it"
       it = this sentence contains the word it
@@ -105,38 +102,43 @@ The following variables are available inside a test file:
   * `$TAP_VERSION`:
       TAP protocol version.
 
+
 ## METHODS
 
 The following methods are available inside a test file:
 
-  * `comment [<message>]`:
+  * `comment` [*message*]:
       Print a message without breaking the tap output. This is a wrapper for `printf "# %s\n" >&2`.
 
-  * `pass [<message>]`:
+  * `pass` [*message*]:
       Generate a passing assertion with a message.
 
-  * `fail [<message>]`:
+  * `fail` [*message*]:
       Generate a failing assertion with a message.
 
 
 ## MICROBENCHMARKS
 
-You can measure average execution speed between functions and/or other utilities using `--time=<function>[,...]`.
+You can measure average execution speed between functions and/or other utilities using `--time`=*function*[,...].
 
 This can be useful when trying to compare two or more ways to do the same thing, and we want to know which one is possibly faster.
 
-    fishtape --time=func{1,2,3} [--pipe=program]
+```
+fishtape --time=func{1,2,3} [--pipe=program]
+```
 
-**Fishtape** will use any available standard input for arguments when invoking each of the given functions:
+Fishtape will use any available standard input for arguments when invoking each of the given functions:
 
-    fishtape --time=bubble,heap,qsort < numbers
+```
+fishtape --time=bubble,heap,qsort < numbers
+```
 
 
 ## BUGS
 
 ### Line Buffered Output
 
-According to <github.com/fish-shell/fish-shell/issues/1396> redirections and pipes involving blocks are run serially, not in parallel. This causes `fishtape` to block the pipeline and buffer all of its output. To emit a line buffered stream use `--pipe=<program>`.
+According to <github.com/fish-shell/fish-shell/issues/1396> redirections and pipes involving blocks are run serially, not in parallel. This causes `fishtape` to block the pipeline and buffer all of its output. To emit a line buffered stream use `--pipe`=*program*.
 
     fishtape test.fish --pipe=tap-consumer
 
@@ -149,13 +151,13 @@ According to <github.com/fish-shell/fish-shell/issues/1396> redirections and pip
 
 ## AUTHORS
 
-Jorge Bucaran <j@bucaran.me>. See also AUTHORS.
+Jorge Bucaran *j@bucaran.me*. See also AUTHORS.
 
 ## SEE ALSO
 
-* test(1)
-* [fishtape(7)][fishtape-7]
-* help expand-command-substitution
-* `github.com/fisherman/fishtape/issues`
+* `test`(1)
+* `fishtape`(7)
+* `help` expand-command-substitution
+* `https://github.com/fisherman/fishtape/issues`
 
 [fishtape-7]: https://github.com/bucaran/fishtape/blob/master/man/man7/fishtape.md

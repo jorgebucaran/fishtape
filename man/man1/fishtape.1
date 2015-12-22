@@ -7,18 +7,18 @@
 \fBfishtape\fR \- TAP producer and test harness for fish
 .
 .SH "SYNOPSIS"
-\fBfishtape [<file> \.\.\.]\fR
+\fBfishtape\fR [\fIfile\fR \.\.\.]
 .
 .br
-\fBfishtape [\-\-time=<utility[,\.\.\.]>] [\-\-pipe=<utility>]\fR
+\fBfishtape\fR [\fB\-\-time\fR=\fIutility\fR[,\.\.\.]] [\fB\-\-pipe\fR=\fIutility\fR]
 .
 .br
-\fBfishtape [\-\-help] [\-\-version]\fR
+\fBfishtape\fR [\fB\-\-help\fR] [\fB\-\-version\fR]
 .
 .br
 .
 .SH "DESCRIPTION"
-\fBFishtape\fR is a TAP (Test Anything Protocol) producer and test harness for fish\. \fBFishtape\fR reads the specified files, or the standard input if no files are given, and executes any \fBtest blocks\fR it finds producing a TAP stream\.
+\fIFishtape\fR is a TAP (Test Anything Protocol) producer and test harness for fish\. Fishtape reads the specified files, or the standard input if no files are given, and executes \fItest blocks\fR producing a TAP stream\.
 .
 .P
 This utility also provides a simple mechanism for creating microbenchmarks to measure average utility execution speed\.
@@ -26,11 +26,11 @@ This utility also provides a simple mechanism for creating microbenchmarks to me
 .SH "OPTIONS"
 .
 .TP
-\fB\-t\fR, \fB\-\-time=<utility>[,\.\.\.]\fR
+\fB\-t\fR, \fB\-\-time\fR=\fIutility\fR[,\.\.\.]
 Benchmark given \fIutility\fR and/or functions\.
 .
 .TP
-\fB\-p\fR, \fB\-\-pipe=<utility>\fR
+\fB\-p\fR, \fB\-\-pipe\fR=\fIutility\fR
 Pipe line buffered output into given \fIutility\fR\.
 .
 .TP
@@ -41,12 +41,8 @@ Show version information\.
 \fB\-h\fR, \fB\-\-help\fR
 Show help information\.
 .
-.TP
-\fB\-\-path=<helpers path>\fR
-Use given \fIpath\fR to locate preprocessor helpers\. \fBInternal use\.\fR
-.
 .SH "EXAMPLES"
-Test files are fish files with one or more \fBtest blocks\fR\. A test block consists of an optional description and any test expression supported by \fBtest(1)\fR\.
+Test files are fish files with one or more test blocks\. A test block consists of an optional description and any test expression supported by \fBtest\fR(1)\.
 .
 .IP "" 4
 .
@@ -93,7 +89,7 @@ end
 .IP "" 0
 .
 .P
-Where \fB<expression>\fR is any \fBtest(1)\fR valid expression; in addition, \fB=\fR and \fB!=\fR operators are overloaded to check for item inclusion or exclusion in lists\.
+Where \fIexpression\fR is any \fBtest\fR(1) valid expression; in addition, \fB=\fR and \fB!=\fR operators are overloaded to check for item inclusion or exclusion in lists\.
 .
 .IP "" 4
 .
@@ -168,19 +164,19 @@ TAP protocol version\.
 The following methods are available inside a test file:
 .
 .TP
-\fBcomment [<message>]\fR
+\fBcomment\fR [\fImessage\fR]
 Print a message without breaking the tap output\. This is a wrapper for \fBprintf "# %s\en" >&2\fR\.
 .
 .TP
-\fBpass [<message>]\fR
+\fBpass\fR [\fImessage\fR]
 Generate a passing assertion with a message\.
 .
 .TP
-\fBfail [<message>]\fR
+\fBfail\fR [\fImessage\fR]
 Generate a failing assertion with a message\.
 .
 .SH "MICROBENCHMARKS"
-You can measure average execution speed between functions and/or other utilities using \fB\-\-time=<function>[,\.\.\.]\fR\.
+You can measure average execution speed between functions and/or other utilities using \fB\-\-time\fR=\fIfunction\fR[,\.\.\.]\.
 .
 .P
 This can be useful when trying to compare two or more ways to do the same thing, and we want to know which one is possibly faster\.
@@ -196,7 +192,7 @@ fishtape \-\-time=func{1,2,3} [\-\-pipe=program]
 .IP "" 0
 .
 .P
-\fBFishtape\fR will use any available standard input for arguments when invoking each of the given functions:
+Fishtape will use any available standard input for arguments when invoking each of the given functions:
 .
 .IP "" 4
 .
@@ -211,7 +207,7 @@ fishtape \-\-time=bubble,heap,qsort < numbers
 .SH "BUGS"
 .
 .SS "Line Buffered Output"
-According to <github\.com/fish\-shell/fish\-shell/issues/1396> redirections and pipes involving blocks are run serially, not in parallel\. This causes \fBfishtape\fR to block the pipeline and buffer all of its output\. To emit a line buffered stream use \fB\-\-pipe=<program>\fR\.
+According to <github\.com/fish\-shell/fish\-shell/issues/1396> redirections and pipes involving blocks are run serially, not in parallel\. This causes \fBfishtape\fR to block the pipeline and buffer all of its output\. To emit a line buffered stream use \fB\-\-pipe\fR=\fIprogram\fR\.
 .
 .IP "" 4
 .
@@ -239,16 +235,16 @@ Jorge Bucaran \fIj@bucaran\.me\fR\. See also AUTHORS\.
 .SH "SEE ALSO"
 .
 .IP "\(bu" 4
-test(1)
+\fBtest\fR(1)
 .
 .IP "\(bu" 4
-fishtape(7) \fIhttps://github\.com/bucaran/fishtape/blob/master/man/man7/fishtape\.md\fR
+\fBfishtape\fR(7)
 .
 .IP "\(bu" 4
-help expand\-command\-substitution
+\fBhelp\fR expand\-command\-substitution
 .
 .IP "\(bu" 4
-\fBgithub\.com/fisherman/fishtape/issues\fR
+\fBhttps://github\.com/fisherman/fishtape/issues\fR
 .
 .IP "" 0
 
