@@ -11,6 +11,8 @@
 
 Fishtape is a [TAP][tap] producer and test harness for [fish][fish]. Fishtape scans one or more fish files and executes _test blocks_ producing a TAP stream.
 
+See [Awesome TAP][awesome-tap] for a list of consumers / reporters, tools and other TAP resources.
+
 ## Install
 
 ```fish
@@ -87,3 +89,4 @@ See [`fishtape(1)`][fishtape-1] and [`fishtape(7)`][fishtape-7]. For questions a
 [fisherman]:    http://github.com/fisherman/fisherman
 [travis-link]:  https://travis-ci.org/fisherman/fishtape
 [travis-badge]: https://img.shields.io/travis/fisherman/fishtape.svg?style=flat-square
+[awesome-tap]: https://github.com/sindresorhus/awesome-tap
