@@ -125,8 +125,8 @@ fishtape test.fish --pipe=tap-nyan
 
 * See [Awesome TAP] for a list of consumers / reporters, tools and other TAP resources.
 
-[travis-link]: https://travis-ci.org/fishery/fishtape
-[travis-badge]: https://img.shields.io/travis/fishery/fishtape.svg?style=flat-square
+[travis-link]: https://travis-ci.org/fisherman/fishtape
+[travis-badge]: https://img.shields.io/travis/fisherman/fishtape.svg?style=flat-square
 [version-badge]: https://img.shields.io/badge/latest-v1.0.0-00B9FF.svg?style=flat-square
 [version-link]: https://github.com/fisherman/fisherman/releases
 [slack-link]: https://fisherman-wharf.herokuapp.com/
@@ -137,6 +137,6 @@ fishtape test.fish --pipe=tap-nyan
 [Fishtape]: https://cloud.githubusercontent.com/assets/8317250/12836355/6ac01bd8-cbfb-11e5-8ea1-68a4b18e3a81.gif
 [Awesome TAP]: https://github.com/sindresorhus/awesome-tap
 [fisherman]: http://github.com/fisherman/fisherman
-[fin]: http://github.com/fishery/fin
-[issues]: https://github.com/fishery/fishtape/issues
+[fin]: http://github.com/fisherman/fin
+[issues]: https://github.com/fisherman/fishtape/issues
 [fish-shell/#1396]: https://github.com/fish-shell/fish-shell/issues/1396
