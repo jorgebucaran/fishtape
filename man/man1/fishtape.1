@@ -1,0 +1,183 @@
+.
+.TH "FISHTAPE" "1" "February 2016" "" "fishtape"
+.
+.SH "NAME"
+\fBfishtape\fR \- TAP producer and test harness for Fish
+.
+.SH "SYNOPSIS"
+\fBfishtape\fR [\fIfile\fR \.\.\.]
+.
+.br
+\fBfishtape\fR [\fB\-\-pipe\fR=\fIutility\fR]
+.
+.br
+\fBfishtape\fR [\fB\-\-help\fR] [\fB\-\-version\fR]
+.
+.br
+.
+.SH "DESCRIPTION"
+\fBFishtape\fR is a TAP \fIhttp://testanything\.org/\fR producing test runner for fish\. It scans one or more \fI\.fish\fR files and evaluates test blocks producing a TAP stream\.
+.
+.SH "USAGE"
+.
+.SS "WRITING TESTS"
+Test files are \fI\.fish\fR files with one or more test blocks\. A test block consists of an optional description and any test expression supported by test(1)\.
+.
+.IP "" 4
+.
+.nf
+
+test "current directory is home"
+    $HOME = $DIRNAME
+end
+
+test "math still works"
+    42 \-eq (math 41 + 1)
+end
+
+test "test is a builtin"
+    "test" = (builtin \-n)
+end
+
+test "no odds are evens"
+    1 3 5 7 != (
+        for i in (seq $n)
+            if test (math $i%2) = 0
+                echo $i
+            end
+        end
+        )
+end
+.
+.fi
+.
+.IP "" 0
+.
+.SS "RUNNING TESTS"
+Fishtape reads any given files, or the standard input if no files are given, and converts test blocks into valid Fish syntax which is then evaluated, producing a TAP stream\.
+.
+.IP "" 4
+.
+.nf
+
+fishtape path/to/tests/*\.fish
+.
+.fi
+.
+.IP "" 0
+.
+.SH "SETUP AND TEARDOWN"
+Include a setup and teardown method in your test file with code that must be run before and after every test\.
+.
+.IP "\(bu" 4
+setup
+.
+.IP "" 0
+.
+.P
+Run before each test in the current file\. Use setup to load fixtures and/or set up your environment\.
+.
+.IP "" 4
+.
+.nf
+
+```fish
+set path $DIRNAME/$TESTNAME
+
+function setup
+    mkdir \-p $path
+end
+```
+.
+.fi
+.
+.IP "" 0
+.
+.IP "\(bu" 4
+teardown
+.
+.IP "" 0
+.
+.P
+Run after each test in the current file\. Use teardown to clean up loaded resources, etc\.
+.
+.IP "" 4
+.
+.nf
+
+```fish
+function teardown
+    rm \-rf $path
+end
+```
+.
+.fi
+.
+.IP "" 0
+.
+.SH "VARIABLES"
+The following variables are available inside a test file:
+.
+.IP "\(bu" 4
+$FILENAME
+.
+.IP
+Path to the running script\.
+.
+.IP "\(bu" 4
+$DIRNAME
+.
+.IP
+Directory name of the running script\.
+.
+.IP "\(bu" 4
+$TEST
+.
+.IP
+Name of the running script\.
+.
+.IP "\(bu" 4
+$TAP_VERSION
+.
+.IP
+TAP protocol version\.
+.
+.IP "" 0
+.
+.SH "NOTES"
+.
+.SS "LINE BUFFERED OUTPUT"
+According to [fish\-shell/#1396][fish\-shell\-1396], redirections and pipes involving blocks are run serially, not in parallel\. This causes fishtape to block the pipeline and buffer all of its output\. To emit a line buffered stream use \-\-pipe=\fIprogram\fR\.
+.
+.IP "" 4
+.
+.nf
+
+fishtape test\.fish \-\-pipe=tap\-nyan
+.
+.fi
+.
+.IP "" 0
+.
+.SS "TESTS"
+.
+.IP "\(bu" 4
+Only one expression per test block is allowed\. Use command substitutions to create complex test expressions\.
+.
+.IP "\(bu" 4
+Each test file is wrapped in \fBbegin; end\fR blocks under the hood to protect your local scope\. In addition, global and universal variables are restored before each test\.
+.
+.IP "" 0
+.
+.SH "AUTHORS"
+Jorge Bucaran \fIj@bucaran\.me\fR\.
+.
+.SH "SEE ALSO"
+.
+.IP "\(bu" 4
+\fBtest(1)\fR
+.
+.IP "\(bu" 4
+\fBhelp expand\-command\-substitution\fR
+.
+.IP "" 0
