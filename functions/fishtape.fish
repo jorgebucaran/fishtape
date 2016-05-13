@@ -31,20 +31,14 @@ function fishtape -d "TAP producer and test harness for fish"
                 return
 
             case -h --help
-                printf "Usage: fishtape [<file> ...] [--dry-run] [--pipe=<cmd>]\n"
-                printf "                [--quiet] [--help] [--version]\n\n"
-
-                printf "    -d --dry-run     Print pre-processed files to stdout\n"
-                printf "       --pipe=<cmd>  Pipe line buffered output into <cmd>\n"
-                printf "    -q --quiet       Set quiet mode\n"
-                printf "    -h --help        Show this help\n"
+                __fishtape_usage > /dev/stderr
                 return
 
             case -- -
 
             case -\*
-                printf "fishtape: '%s' is not a valid option.\n" $1 >& 2
-                fishtape -h >& 2
+                printf "fishtape: '%s' is not a valid option.\n" $1 > /dev/stderr
+                fishtape -h > /dev/stderr
                 return 1
 
             case \*
@@ -148,6 +142,12 @@ function fishtape -d "TAP producer and test harness for fish"
     ' $files | fish -c "$print" ^ $error
 end
 
+function __fishtape_usage
+    echo "Usage: fishtape [FILE ...] [(-d | --dry-run)] [--pipe COMMAND]"
+    echo "                [(-q | --quiet)] [(-h | --help)] [(-v | --version)]"
+    echo
+end
+
 function __fishtape@runtime
     function fishtape_assert
         set -l count (count $argv)
@@ -192,7 +192,7 @@ function __fishtape@runtime
     end
 
     function comment -d "Print a message without breaking the TAP output"
-        printf "# %s\n" $argv >& 2
+        printf "# %s\n" $argv > /dev/stderr
     end
 
     function fishtape_error -a info operator expected received
