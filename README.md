@@ -1,5 +1,4 @@
 [![Build Status][travis-badge]][travis-link]
-[![Fishtape Version][version-badge]][version-link]
 [![Slack Room][slack-badge]][slack-link]
 
 # Fishtape
@@ -121,8 +120,6 @@ fishtape test.fish --pipe=tap-nyan
 
 [travis-link]: https://travis-ci.org/fisherman/fishtape
 [travis-badge]: https://img.shields.io/travis/fisherman/fishtape.svg
-[version-badge]: https://img.shields.io/badge/latest-v1.0.0-00B9FF.svg
-[version-link]: https://github.com/fisherman/fisherman/releases
 [slack-link]: https://fisherman-wharf.herokuapp.com/
 [slack-badge]: https://fisherman-wharf.herokuapp.com/badge.svg
 
