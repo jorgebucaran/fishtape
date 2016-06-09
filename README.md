@@ -51,9 +51,6 @@ Fishtape reads any given files, or the standard input if no files are given, and
 fishtape path/to/tests/*.fish
 ```
 
-![Fishtape]
-
-
 ## Setup and Teardown
 
 Include a setup and teardown method in your test file with code that must be run before and after every test.
@@ -125,7 +122,6 @@ fishtape test.fish --pipe=tap-nyan
 
 [TAP]: http://testanything.org/
 [fish]: https://github.com/fish-shell/fish-shell
-[Fishtape]: https://cloud.githubusercontent.com/assets/8317250/12836355/6ac01bd8-cbfb-11e5-8ea1-68a4b18e3a81.gif
 [Awesome TAP]: https://github.com/sindresorhus/awesome-tap
 [fisherman]: http://github.com/fisherman/fisherman
 [issues]: https://github.com/fisherman/fishtape/issues
