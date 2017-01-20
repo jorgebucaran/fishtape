@@ -1,9 +1,9 @@
+# Fishtape
+
 [![Build Status][travis-badge]][travis-link]
 [![Slack Room][slack-badge]][slack-link]
 
-# Fishtape
-
-**Fishtape** is a [TAP] producing test runner for [fish]. It scans one or more *.fish* files and evaluates test blocks producing a TAP stream.
+Fishtape is a [TAP] producing test runner for [fish]. It scans one or more *.fish* files and evaluates test blocks producing a TAP stream.
 
 ## Install
 
