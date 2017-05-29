@@ -89,7 +89,7 @@ Path to the running script.
 
 Directory name of the running script.
 
-### `$TEST`
+### `$TESTNAME`
 
 Name of the running script.
 
