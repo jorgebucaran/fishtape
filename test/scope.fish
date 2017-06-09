@@ -4,7 +4,7 @@ function setup
     set -g USER foo
 end
 
-function -S teardown
+function teardown -S
     set -l msg "$TESTNAME: globals are restored before teardown"
 
     if test $USER != foo
