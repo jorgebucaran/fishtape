@@ -4,7 +4,7 @@ function fishtape -d "TAP producer and test harness for fish"
         return 1
     end
 
-    set -l fishtape_version 1.0.0
+    set -l fishtape_version 1.1.0
 
     set -l files
     set -l pipes
