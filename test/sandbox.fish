@@ -1,12 +1,12 @@
 set -l tally 0
 set -l proof false
 
-function -S setup
+function setup -S
     set proof true
     set tally (math 1 + $tally)
 end
 
-function -S teardown
+function teardown -S
     pass "$TESTNAME: teardown is called after running tests"
 end
 
