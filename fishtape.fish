@@ -139,7 +139,7 @@ function fishtape -d "TAP producer and test harness for fish"
 
             { print }
 
-    ' $files | fish -c "$print" ^ $error
+    ' $files | fish -c "$print" 2>$error
 end
 
 function __fishtape_usage
@@ -259,7 +259,7 @@ function __fishtape@runtime
     function fishtape_test -a info
         set -e argv[1]
 
-        if fishtape_assert $argv ^ /dev/null
+        if fishtape_assert $argv 2>/dev/null
             printf "ok %s" (math 1 + $__fishtape_count)
 
             if test -n "$info"
