@@ -247,9 +247,12 @@ function __fishtape@runtime
     end
 
     function fishtape_restore_globals
+        set read_only_vars "fish_pid" "hostname"
         for scope in --global --universal
             set $scope --name | sed -nE 's/^__fishtape_(.*)/\1 &/p' | while read -l var old_var
-                set $scope $var $$old_var
+                if not contains $var $read_only_vars
+                    set $scope $var $$old_var
+                end
             end
         end
 
