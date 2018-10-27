@@ -1,16 +1,17 @@
 # Fishtape
 
 [![Build Status][travis-badge]][travis-link]
-[![Slack Room][slack-badge]][slack-link]
+
+> ✋ Psst! Fishtape is currently being rewritten. Follow [this issue](https://github.com/fisherman/fishtape/issues/31) for updates and check back soon!
 
 Fishtape is a [TAP] producing test runner for [fish]. It scans one or more *.fish* files and evaluates test blocks producing a TAP stream.
 
 ## Install
 
-With [fisherman]:
+With [fisher]:
 
 ```fish
-fisher fishtape
+fisher add jorgebucaran/fishtape
 ```
 
 ## Usage
