@@ -139,7 +139,7 @@ function fishtape -d "TAP producer and test harness for fish"
 
             { print }
 
-    ' $files | fish -c "$print" ^ $error
+    ' $files | fish -c "$print" 2>$error
 end
 
 function __fishtape_usage
@@ -247,9 +247,12 @@ function __fishtape@runtime
     end
 
     function fishtape_restore_globals
+        set read_only_vars "fish_pid" "hostname"
         for scope in --global --universal
             set $scope --name | sed -nE 's/^__fishtape_(.*)/\1 &/p' | while read -l var old_var
-                set $scope $var $$old_var
+                if not contains $var $read_only_vars
+                    set $scope $var $$old_var
+                end
             end
         end
 
@@ -259,7 +262,7 @@ function __fishtape@runtime
     function fishtape_test -a info
         set -e argv[1]
 
-        if fishtape_assert $argv ^ /dev/null
+        if fishtape_assert $argv 2>/dev/null
             printf "ok %s" (math 1 + $__fishtape_count)
 
             if test -n "$info"
