@@ -234,7 +234,9 @@ function __fishtape@runtime
             switch $var
                 case _\* version umask status history COLUMNS FISH_VERSION LINES PWD SHLVL PATH TMUX TERM
                 case \*
-                    set $scope __fishtape_$var $$var
+                    set -l x u
+                    set -qx $var; and set x x
+                    set $scope __fishtape__"$x"_$var $$var
             end
         end
     end
@@ -249,9 +251,9 @@ function __fishtape@runtime
     function fishtape_restore_globals
         set read_only_vars "fish_pid" "hostname"
         for scope in --global --universal
-            set $scope --name | sed -nE 's/^__fishtape_(.*)/\1 &/p' | while read -l var old_var
+            set $scope --name | sed -nE 's/^__fishtape_(.)_(.*)/\1 \2 &/p' | while read -l x var old_var
                 if not contains $var $read_only_vars
-                    set $scope $var $$old_var
+                    set -$x $scope $var $$old_var
                 end
             end
         end
