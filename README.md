@@ -113,7 +113,7 @@ The following variables are globally available for all test files:
 
 TAP is a text-based protocol for reporting test results. It's easy to parse for machines and still readable for humans. But it isn't the end of it. If you are looking for reporting alternatives see [this list of reporters](https://github.com/substack/tape#pretty-reporters) or try [tap-mocha-reporter](https://github.com/tapjs/tap-mocha-reporter) for an all-in-one solution.
 
-Once you've downloaded a TAP-compliant reporter and put it somewhere in your \$PATH, pipe the output from `fishtape` to it.
+Once you've downloaded a TAP-compliant reporter and put it somewhere in your \$PATH, pipe the `fishtape` output to it.
 
 > ✋ Redirections and pipes involving blocks are run serially in fish (see [fish-shell/#1396](https://github.com/fish-shell/fish-shell/issues/1396)). This means we must run `fishtape` in a subshell to enable streaming support.
 
