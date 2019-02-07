@@ -7,13 +7,11 @@
 
 Fishtape is a <a href=https://testanything.org title="Test Anything Protocol">TAP</a>-based test runner for the [fish shell](https://fishshell.com).
 
-## Features
+Your tests run concurrently in their own sub-shells, siloing your test environment. That means you are free to set variables, define functions, and modify the executing environment without hijacking your current session or other tests.
 
-- Clean syntax derived from the [`test`](https://fishshell.com/docs/current/commands.html#test) builtin
-- <a href=https://testanything.org title="Test Anything Protocol">TAP</a> output—easy to parse & human readable (see [reporting options](#reporting-options))
-- Isolated test environment—tests run concurrently in their own sub-shells
+There's no learning curve. If you know how to use the [`test`](https://fishshell.com/docs/current/commands.html#test) builtin, you are ready to use Fishtape.
 
-## Install
+## Installation
 
 With [Fisher](https://github.com/jorgebucaran/fisher) (recommended):
 
@@ -76,11 +74,13 @@ ok 3 - test is a builtin
 
 Test files run in the background in a sub-shell while individual test cases run sequentially. Test output is buffered (delivered in batches) until all jobs are complete. If all the test cases pass, `fishtape` exits with status `0`—else, it exits with status `1`.
 
-Buffered output means we can't write to stdout or stderr without running into race conditions. To print a TAP message use the special `@mesg` function.
+Buffered output means we can't write to stdout or stderr without running into a race condition. To print a TAP message use the special `@mesg` function.
 
 ```fish
-@mesg "This message is approved by fish—the friendly interactive shell"
+@mesg "Brought to you by fish—the friendly interactive shell"
 ```
+
+The message will be delivered in the same batch of test results from a file.
 
 ### Setup and Teardown
 
@@ -111,12 +111,14 @@ The following variables are globally available for all test files:
 
 ## Reporting Options
 
-TAP output is easy to parse for machines and still readable for humans. If you are looking for a more sophisticated reporting option, you can pipe `fishtape` to any TAP-compliant reporter, e.g. [tapjs/tap-mocha-reporter](https://github.com/tapjs/tap-mocha-reporter).
+TAP is a text-based protocol for reporting test results. It's easy to parse for machines and still readable for humans. But it isn't the end of it. If you are looking for reporting alternatives see [this list of reporters](https://github.com/substack/tape#pretty-reporters) or try [tap-mocha-reporter](https://github.com/tapjs/tap-mocha-reporter) for an all-in-one solution.
 
-Redirections and pipes involving blocks are run serially in fish ([fish-shell/#1396](https://github.com/fish-shell/fish-shell/issues/1396)). This means we must run `fishtape` in a subshell for streaming support.
+Once you've downloaded a TAP-compliant reporter and put it somewhere in your \$PATH, pipe the output from `fishtape` to it.
+
+> ✋ Redirections and pipes involving blocks are run serially in fish (see [fish-shell/#1396](https://github.com/fish-shell/fish-shell/issues/1396)). This means we must run `fishtape` in a subshell to enable streaming support.
 
 ```fish
-fish -c "fishtape test/*.fish" | tap-mocha-reporter nyan
+fish -c "fishtape test/*.fish" | tap-nyan
 ```
 
 ## License
