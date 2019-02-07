@@ -1,129 +1,124 @@
+> ✋ Psst! Migrating from V1 to V2? Check the [migration guide](https://github.com/fisherman/fishtape/issues/36) and happy upgrading!
+
 # Fishtape
 
-[![Build Status][travis-badge]][travis-link]
+[![Build Status](https://img.shields.io/travis/jorgebucaran/fishtape.svg)](https://travis-ci.org/jorgebucaran/fishtape)
+[![Releases](https://img.shields.io/github/release/jorgebucaran/fishtape.svg?label=latest)](https://github.com/jorgebucaran/fishtape/releases)
 
-> ✋ Psst! Fishtape is currently being rewritten. Follow [this issue](https://github.com/fisherman/fishtape/issues/31) for updates and check back soon!
+Fishtape is a <a href=https://testanything.org title="Test Anything Protocol">TAP</a>-based test runner for the [fish shell](https://fishshell.com).
 
-Fishtape is a [TAP] producing test runner for [fish]. It scans one or more *.fish* files and evaluates test blocks producing a TAP stream.
+## Features
+
+- Clean syntax derived from the [`test`](https://fishshell.com/docs/current/commands.html#test) builtin
+- <a href=https://testanything.org title="Test Anything Protocol">TAP</a> output—easy to parse & human readable (see [reporting options](#reporting-options))
+- Isolated test environment—tests run concurrently in their own sub-shells
 
 ## Install
 
-With [fisher]:
+With [Fisher](https://github.com/jorgebucaran/fisher) (recommended):
 
 ```fish
 fisher add jorgebucaran/fishtape
 ```
 
+<details>
+<summary>Not using a package manager?</summary>
+
+---
+
+Copy [`fishtape.fish`](fishtape.fish) to any directory on your function path.
+
+```fish
+set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
+curl https://git.io/fishtape.fish --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fishtape.fish
+```
+
+To uninstall, remove the file.
+
+</details>
+
+### System Requirements
+
+- [fish](https://github.com/fish-shell/fish-shell) 2.0+
+
 ## Usage
 
-### Writing Tests
-
-Test files are *.fish* files with one or more test blocks. A test block consists of an optional description and any test expression supported by test(1).
+Test files are `.fish` files with `@test` definitions. A test definition (or test case) consists of an optional description, followed by one or more operators and their arguments. You can use any operator supported by the [`test`](https://fishshell.com/docs/current/commands.html#test) builtin except for the `-a` and `-o` conditional operators.
 
 ```fish
-test "current directory is home"
-    $HOME = $DIRNAME
-end
+@test "math works" (math 41 + 1) -eq 42
 
-test "math still works"
-    42 -eq (math 41 + 1)
-end
+@test "extract basename" (
+    string split -rm1 / /usr/local/bin/fish
+)[-1] = "fish"
 
-test "test is a builtin"
-    "test" = (builtin -n)
-end
-
-test "no odds are evens"
-    1 3 5 7 != (
-        for i in (seq $n)
-            if test (math $i%2) = 0
-                echo $i
-            end
-        end
-        )
-end
+@test "test is a builtin" (
+    contains -- test (builtin -n)
+) $status -eq 0
 ```
 
-### Running Tests
-
-Fishtape reads any given files, or the standard input if no files are given, and converts test blocks into valid Fish syntax which is then evaluated, producing a TAP stream.
+Run `fishtape` with one or more test files to run your tests.
 
 ```fish
-fishtape path/to/tests/*.fish
+fishtape tests/*.fish
 ```
 
-## Setup and Teardown
+```diff
+TAP version 13
+ok 1 - math works
+ok 2 - extract basename
+ok 3 - test is a builtin
 
-Include a setup and teardown method in your test file with code that must be run before and after every test.
+1..3
+# pass 3
+# ok
+```
 
-### `setup`
+Test files run in the background in a sub-shell while individual test cases run sequentially. Test output is buffered (delivered in batches) until all jobs are complete. If all the test cases pass, `fishtape` exits with status `0`—else, it exits with status `1`.
 
-Run before each test in the current file. Use setup to load fixtures and/or set up your environment.
+Buffered output means we can't write to stdout or stderr without running into race conditions. To print a TAP message use the special `@mesg` function.
 
 ```fish
-set path $DIRNAME/$TESTNAME
+@mesg "This message is approved by fish—the friendly interactive shell"
+```
 
+### Setup and Teardown
+
+You can define special `setup` and `teardown` functions, which run before and after each test case, respectively. Use them to load fixtures, set up your environment, and clean up when you're done.
+
+```fish
 function setup
-    mkdir -p $path
+    set -g tmp (command mktemp -d /tmp/foo.XXXXX)
+    command mkdir -p $tmp
 end
-```
 
-### `teardown`
-
-Run after each test in the current file. Use teardown to clean up loaded resources, etc.
-
-```fish
 function teardown
-    rm -rf $path
+    command rm -rf $tmp
 end
+
+@test "directory is empty" -z (
+    pushd $tmp
+    command ls -1 | command awk '{ ++i } END { print i }'
+    popd
+)
 ```
 
-## Variables
+### Special Variables
 
-The following variables are available inside a test file:
+The following variables are globally available for all test files:
 
-### `$FILENAME`
+- `$filename` the name of the currently running test file
 
-Path to the running script.
+## Reporting Options
 
-### `$DIRNAME`
+TAP output is easy to parse for machines and still readable for humans. If you are looking for a more sophisticated reporting option, you can pipe `fishtape` to any TAP-compliant reporter, e.g. [tapjs/tap-mocha-reporter](https://github.com/tapjs/tap-mocha-reporter).
 
-Directory name of the running script.
-
-### `$TESTNAME`
-
-Name of the running script.
-
-### `$TAP_VERSION`
-
-TAP protocol version.
-
-## Notes
-
-### Line Buffered Output
-
-According to [fish-shell/#1396], redirections and pipes involving blocks are run serially, not in parallel. This causes fishtape to block the pipeline and buffer all of its output. To emit a line buffered stream use --pipe=*program*.
+Redirections and pipes involving blocks are run serially in fish ([fish-shell/#1396](https://github.com/fish-shell/fish-shell/issues/1396)). This means we must run `fishtape` in a subshell for streaming support.
 
 ```fish
-fishtape test.fish --pipe=tap-nyan
+fish -c "fishtape test/*.fish" | tap-mocha-reporter nyan
 ```
 
-### Tests
+## License
 
-* Only one expression per test block is allowed. Use command substitutions to create complex test expressions.
-
-* Each test file is wrapped in `begin; end` blocks under the hood to protect your local scope. In addition, global and universal variables are restored before each test.
-
-* See [Awesome TAP] for a list of consumers / reporters, tools and other TAP resources.
-
-[travis-link]: https://travis-ci.org/fisherman/fishtape
-[travis-badge]: https://img.shields.io/travis/fisherman/fishtape.svg
-[slack-link]: https://fisherman-wharf.herokuapp.com/
-[slack-badge]: https://fisherman-wharf.herokuapp.com/badge.svg
-
-[TAP]: http://testanything.org/
-[fish]: https://github.com/fish-shell/fish-shell
-[Awesome TAP]: https://github.com/sindresorhus/awesome-tap
-[fisherman]: http://github.com/fisherman/fisherman
-[issues]: https://github.com/fisherman/fishtape/issues
-[fish-shell/#1396]: https://github.com/fish-shell/fish-shell/issues/1396
+[MIT](LICENSE.md)

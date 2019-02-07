@@ -1,5 +1,0 @@
-complete -c fishtape -s p -l pipe -d "=<cmd> Pipe line buffered output into command"
-complete -c fishtape -s d -l dry-run -d "Print preprocessed files to stdout"
-complete -c fishtape -s q -l quiet -d "Enable quiet mode"
-complete -c fishtape -s h -l help -d "Show help information"
-complete -c fishtape -s v -l version -d "Show version information"
