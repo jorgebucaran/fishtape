@@ -1,4 +1,4 @@
-> ###### Psst! Migrating from V1 to V2? Check the [migration guide](https://github.com/jorgebucaran/fishtape/issues/38) and happy upgrading!
+> ###### 👋 Psst! Migrating from V1 to V2? Check the [migration guide](https://github.com/jorgebucaran/fishtape/issues/38) and happy upgrading!
 
 # Fishtape
 
