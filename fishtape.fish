@@ -22,8 +22,9 @@ function fishtape -d "TAP-based test runner"
                         right = args[0]
                         left = is_binary(operator = args[1]) ? args[2] : ""
                         is = args[i = (left || (left == 0) ? 3 : 2)] == "!" ? "!" : ""
+                        desc = args[is ? ++i : i]
                         print\
-                            args[is ? ++i : i] "\n"\
+                            desc "\n"\
                             left "\n" \
                             (is ? is" " : "") operator "\n"\
                             right "\n"\
