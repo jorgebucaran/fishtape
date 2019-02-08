@@ -152,7 +152,7 @@ function fishtape -d "TAP-based test runner"
                             "  ---\n"\
                             "    operator: "(is ? "!" : "")$5"\n"\
                             "    expected: "$4"\n"\
-                            "    actual:   "($6 == "" ? "\"\"" : $6)"\n"\
+                            "    actual:   "$6"\n"\
                             "  ..."
                     }
                 }
