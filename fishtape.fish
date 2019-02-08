@@ -110,9 +110,9 @@ function fishtape -d "TAP-based test runner"
                         is = (split($5, ops, " ") && ops[1] == "!" && ($5 = ops[2])) ? "not " : ""
                         $4 = $4 ? $4\
                             : $5 == "-n" \
-                            ? is "a zero length string" \
-                            : $5 == "-z" \
                             ? is "a non-zero length string" \
+                            : $5 == "-z" \
+                            ? is "a zero length string" \
                             : $5 == "-b" \
                             ? is "a block device" \
                             : $5 == "-c" \
@@ -163,7 +163,7 @@ function fishtape -d "TAP-based test runner"
                     if (failed) print "# fail " failed
                     if (todo) print "# todo " todo
                     else if (!failed) print "# ok"
-                    
+
                     exit (failed > 0)
                 }
             '
