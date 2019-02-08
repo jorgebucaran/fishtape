@@ -3,13 +3,13 @@ set -g fishtape_version 2.0.0
 complete -xc fishtape -n __fish_use_subcommand -a --help -d "Show usage help"
 complete -xc fishtape -n __fish_use_subcommand -a --version -d "$fishtape_version"
 
-function fishtape -a cmd -d "TAP-based test runner"
+function fishtape -d "TAP-based test runner"
     if not isatty
         if not contains -- $argv @{test,mesg}
             set argv $argv -
         end
     end
-    switch "$cmd"
+    switch "$argv[1]"
         case @mesg
             echo -e "$argv[2]\tmesg\t$argv[3..-1]"
         case @test
