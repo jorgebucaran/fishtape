@@ -159,9 +159,12 @@ function fishtape -d "TAP-based test runner"
                 END {
                     print "\n1.." total
                     print "# pass " (total - failed - todo)
+
                     if (failed) print "# fail " failed
                     if (todo) print "# todo " todo
                     else if (!failed) print "# ok"
+                    
+                    exit (failed > 0)
                 }
             '
     end
