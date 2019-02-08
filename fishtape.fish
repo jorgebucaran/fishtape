@@ -66,7 +66,7 @@ function fishtape -d "TAP-based test runner"
                 }
                 !/^[[:space:]]*#/ && $0 {
                     gsub(/\'/, "\\\\\'")
-                    sub(/\$filename/, f[split(FILENAME, f, "/")])
+                    gsub(/\$filename/, f[split(FILENAME, f, "/")])
                     sub(/^[[:space:]]*@mesg/, "fishtape @mesg " id)
                     sub(/^[[:space:]]*@test/, "functions -q setup; and setup; fishtape @test " id)
                     print
