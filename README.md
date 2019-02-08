@@ -63,9 +63,9 @@ fishtape tests/*.fish
 
 ```diff
 TAP version 13
-ok 1 - math works
-ok 2 - extract basename
-ok 3 - test is a builtin
+ok 1 math works
+ok 2 extract basename
+ok 3 test is a builtin
 
 1..3
 # pass 3

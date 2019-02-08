@@ -92,7 +92,7 @@ function fishtape -a cmd -d "TAP-based test runner"
                         print\
                             (mesg = batch[$1 i "mesg"])\
                             ? mesg\
-                            : sub(/ok/, "ok " ++total " -", batch[$1 i])\
+                            : sub(/ok/, "ok " ++total, batch[$1 i])\
                             ? batch[$1 i] ((error = batch[$1 i "error"]) && ++failed ? "\n" error : "")\
                             : ""
                         todo = (batch[$1 i "todo"]) ? todo + 1 : todo
