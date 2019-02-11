@@ -152,8 +152,8 @@ function fishtape -d "TAP-based test runner"
                         batch[id "error"] =\
                             "  ---\n"\
                             "    operator: "(is ? "!" : "")$5"\n"\
-                            "    expected: "$4"\n"\
-                            "    actual:   "$6"\n"\
+                            "    expected: "$6"\n"\
+                            "    actual:   "$4"\n"\
                             "  ..."
                     }
                 }
