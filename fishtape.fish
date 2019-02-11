@@ -11,7 +11,7 @@ function fishtape -d "TAP-based test runner"
     end
     switch "$argv[1]"
         case @mesg
-            echo -e "$argv[2]\tmesg\t$argv[3..-1]"
+            echo -s {$argv[2],mesg,$argv[3]}\t
         case @test
             if set -q argv[4]
                 set -l rest (printf "%s\n" $argv[-1..3] | command awk '
