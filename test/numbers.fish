@@ -1,4 +1,4 @@
-@mesg $filename
+@mesg $current_filename
 
 @test "equal to" 1 -eq 1
 @test "less than" 1 -lt 2

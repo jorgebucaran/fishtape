@@ -1,3 +1,4 @@
-@mesg $filename
+@mesg $current_filename
 
-@test "filename" "$filename" = "variables.fish"
+@test "current_dirname" -d "$current_dirname"
+@test "current_filename" -e "$current_dirname/$current_filename"
