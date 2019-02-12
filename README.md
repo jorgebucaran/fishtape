@@ -1,5 +1,3 @@
-> ###### 👋 Psst! Migrating from V1 to V2? Check the [migration guide](https://github.com/jorgebucaran/fishtape/issues/38) and happy upgrading!
-
 # Fishtape
 
 [![Build Status](https://img.shields.io/travis/jorgebucaran/fishtape.svg)](https://travis-ci.org/jorgebucaran/fishtape)
@@ -41,7 +39,7 @@ To uninstall, remove the file.
 
 ## Usage
 
-Test files are `.fish` files with `@test` definitions. A test definition (or test case) consists of an optional description, followed by one or more operators and their arguments. You can use any operator supported by the [`test`](https://fishshell.com/docs/current/commands.html#test) builtin except for the `-a` and `-o` conditional operators.
+Test files are regular `.fish` files with `@test` declarations. A test declaration (or test case) consists of a description, followed by one or more operators and their arguments. You can use any operator supported by the [`test`](https://fishshell.com/docs/current/commands.html#test) builtin except for the `-a` and `-o` conditional operators.
 
 ```fish
 @test "math works" (math 41 + 1) -eq 42
@@ -57,7 +55,7 @@ Test files are `.fish` files with `@test` definitions. A test definition (or tes
 
 Run `fishtape` with one or more test files to run your tests.
 
-```fish
+```sh
 fishtape tests/*.fish
 ```
 
@@ -72,15 +70,13 @@ ok 3 test is a builtin
 # ok
 ```
 
-Test files run in the background in a sub-shell while individual test cases run sequentially. Test output is buffered (delivered in batches) until all jobs are complete. If all the test cases pass, `fishtape` exits with status `0`—else, it exits with status `1`.
+Test files run in the background in a subshell while individual test cases run sequentially. The output is buffered (delivered in batches) until all jobs are complete. If all the tests pass, `fishtape` exits with status `0`—else, it exits with status `1`.
 
-Buffered output means we can't write to stdout or stderr without running into a race condition. To print a TAP message use the special `@mesg` function.
+Buffered output means we can't write to stdout or stderr without running into race conditions. To print a message with a batch of test results, use the `@mesg` declaration.
 
 ```fish
-@mesg "Brought to you by fish—the friendly interactive shell"
+@mesg "Brought to you by the friendly interactive shell"
 ```
-
-The message will be delivered in the same batch of test results from a file.
 
 ### Setup and Teardown
 
@@ -107,15 +103,16 @@ end
 
 The following variables are globally available for all test files:
 
-- `$filename` the name of the currently running test file
+- `$current_dirname` the directory where the currently running test file is located
+- `$current_filename` the name and extension of the currently running test file
 
 ## Reporting Options
 
 TAP is a text-based protocol for reporting test results. It's easy to parse for machines and still readable for humans. But it isn't the end of it. If you are looking for reporting alternatives see [this list of reporters](https://github.com/substack/tape#pretty-reporters) or try [tap-mocha-reporter](https://github.com/tapjs/tap-mocha-reporter) for an all-in-one solution.
 
-Once you've downloaded a TAP-compliant reporter and put it somewhere in your \$PATH, pipe the `fishtape` output to it.
+Once you've downloaded a TAP-compliant reporter and put it somewhere in your `$PATH`, pipe `fishtape` to it.
 
-> ✋ Redirections and pipes involving blocks are run serially in fish (see [fish-shell/#1396](https://github.com/fish-shell/fish-shell/issues/1396)). This means we must run `fishtape` in a subshell to enable streaming support.
+> Redirections and pipes involving blocks are run serially in fish (see [fish-shell/#1396](https://github.com/fish-shell/fish-shell/issues/1396)). This means we must run `fishtape` in a subshell to enable streaming support.
 
 ```fish
 fish -c "fishtape test/*.fish" | tap-nyan
