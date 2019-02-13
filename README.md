@@ -39,7 +39,7 @@ To uninstall, remove the file.
 
 ## Usage
 
-Test files are regular `.fish` files with `@test` declarations. A test declaration (or test case) consists of a description, followed by one or more operators and their arguments. You can use any operator supported by the [`test`](https://fishshell.com/docs/current/commands.html#test) builtin except for the `-a` and `-o` conditional operators.
+A test file is a regular `fish` file with `@test` declarations. A test declaration (or test case) consists of a description, followed by one or more operators and their arguments. You can use any operator supported by the [`test`](https://fishshell.com/docs/current/commands.html#test) builtin except for the `-a` and `-o` conditional operators.
 
 ```fish
 @test "math works" (math 41 + 1) -eq 42
@@ -94,7 +94,7 @@ end
 
 @test "directory is empty" -z (
     pushd $tmp
-    command ls -1 
+    command ls -1
     popd
 )
 ```
