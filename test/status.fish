@@ -8,5 +8,6 @@
     end
     foo
 ) $status -eq 2
+
 false
-@test "default status" $status -eq 0
+@test "reset status" $status -eq 0
