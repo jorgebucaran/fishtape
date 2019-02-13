@@ -100,7 +100,7 @@ function fishtape -d "TAP-based test runner"
             end
             command awk '
                 FNR == 1 {
-                    print (NR > 1 ? end_batch()";" : "") begin_batch()
+                    print (NR > 1 ? end_batch() ";" : "") begin_batch()
                     id++
                 }
                 !/^[[:space:]]*#/ && $0 {
@@ -112,7 +112,7 @@ function fishtape -d "TAP-based test runner"
                     print
                 }
                 END {
-                    print end_batch()";while for j in $jobs;contains -- $j "jobs()";and break;end;end"
+                    print end_batch() ";while for j in $jobs;contains -- $j " jobs() ";and break;end;end"
                 }
                 function begin_batch() {
                     return "fish -c \'"
@@ -121,7 +121,7 @@ function fishtape -d "TAP-based test runner"
                     return "echo " id "\'&;set -l jobs $jobs " jobs(" -l")
                 }
                 function jobs(opt) {
-                    return "(jobs"opt" | command awk \'/^[0-9]+\\\t/ { print $1 }\')"
+                    return "(jobs" opt " | command awk \'/^[0-9]+\\\t/ { print $1 }\')"
                 }
             ' $files | fish -c source | command awk -F\t '
                 BEGIN {
