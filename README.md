@@ -42,15 +42,17 @@ To uninstall, remove the file.
 A test file is a regular `fish` file with `@test` declarations. A test declaration (or test case) consists of a description, followed by one or more operators and their arguments. You can use any operator supported by the [`test`](https://fishshell.com/docs/current/commands.html#test) builtin except for the `-a` and `-o` conditional operators.
 
 ```fish
-@test "math works" (math 41 + 1) -eq 42
+@test "math is real" (math 41 + 1) -eq 42
 
-@test "extract basename" (
+@test "basename is fish" (
     string split -rm1 / /usr/local/bin/fish
 )[-1] = "fish"
 
 @test "test is a builtin" (
     contains -- test (builtin -n)
 ) $status -eq 0
+
+@test "print a sequence of numbers" (seq 3) = "1 2 3"
 ```
 
 Run `fishtape` with one or more test files to run your tests.
@@ -61,12 +63,13 @@ fishtape tests/*.fish
 
 ```diff
 TAP version 13
-ok 1 math works
-ok 2 extract basename
+ok 1 math is real
+ok 2 basename is fish
 ok 3 test is a builtin
+ok 4 print a sequence of numbers
 
-1..3
-# pass 3
+1..4
+# pass 4
 # ok
 ```
 
