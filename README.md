@@ -72,7 +72,7 @@ ok 3 test is a builtin
 
 Test files run in the background in a subshell while individual test cases run sequentially. The output is buffered (delivered in batches) until all jobs are complete. If all the tests pass, `fishtape` exits with status `0`—else, it exits with status `1`.
 
-Buffered output means we can't write to stdout or stderr without running into race conditions. To print a message with a batch of test results, use the `@mesg` declaration.
+Buffered output means we can't write to stdout or stderr without running into race conditions. To print a TAP message along with a batch of test results, use the `@mesg` declaration.
 
 ```fish
 @mesg "Brought to you by the friendly interactive shell"
