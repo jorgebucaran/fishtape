@@ -94,7 +94,7 @@ end
 
 @test "directory is empty" -z (
     pushd $tmp
-    command ls -1 | command awk '{ ++i } END { print i }'
+    command ls -1 
     popd
 )
 ```
