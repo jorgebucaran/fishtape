@@ -1,4 +1,4 @@
-set -g fishtape_version 2.1.0
+set -g fishtape_version 2.1.1
 
 complete -c fishtape -n __fish_use_subcommand -a --help -d "Show usage help"
 complete -c fishtape -n __fish_use_subcommand -a --version -d "$fishtape_version"
