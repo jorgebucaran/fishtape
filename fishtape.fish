@@ -1,7 +1,7 @@
 set -g fishtape_version 2.1.0
 
-complete -xc fishtape -n __fish_use_subcommand -a --help -d "Show usage help"
-complete -xc fishtape -n __fish_use_subcommand -a --version -d "$fishtape_version"
+complete -c fishtape -n __fish_use_subcommand -a --help -d "Show usage help"
+complete -c fishtape -n __fish_use_subcommand -a --version -d "$fishtape_version"
 
 function fishtape -d "TAP-based test runner"
     if not isatty
