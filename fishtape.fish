@@ -92,12 +92,16 @@ function fishtape -d "TAP-based test runner"
                     print out
                 }
             ')
+
             for file in $files
                 if test $file != - -a ! -f $file
                     echo "fishtape: can't open file \"$file\" -- is this a valid file?"
                     return 1
                 end
             end
+
+            set -l tmp (random)
+
             command awk '
                 FNR == 1 {
                     print (NR > 1 ? end_batch() ";" : "") begin_batch()
@@ -123,7 +127,9 @@ function fishtape -d "TAP-based test runner"
                 function jobs(opt) {
                     return "(jobs" opt " | command awk \'/^[0-9]+\\\t/ { print $1 }\')"
                 }
-            ' $files | fish -c source | command awk -F\t '
+            ' $files >@fishtape$tmp
+
+            fish @fishtape$tmp | command awk -F\t '
                 BEGIN {
                     print "TAP version 13"
                 }
@@ -164,5 +170,7 @@ function fishtape -d "TAP-based test runner"
                     exit (failed > 0)
                 }
             '
+
+            command rm -f @fishtape$tmp
     end
 end
