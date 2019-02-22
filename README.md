@@ -75,10 +75,10 @@ ok 4 print a sequence of numbers
 
 Test files run in the background in a subshell while individual test cases run sequentially. The output is buffered (delivered in batches) until all jobs are complete. If all the tests pass, `fishtape` exits with status `0`—else, it exits with status `1`.
 
-Buffered output means we can't write to stdout or stderr without running into race conditions. To print a TAP message along with a batch of test results, use the `@mesg` declaration.
+A buffered output means we can't write to stdout or stderr without running into race conditions. To print a TAP message along with a batch of test results, use the `@mesg` declaration.
 
 ```fish
-@mesg "Brought to you by the friendly interactive shell"
+@mesg "Brought to you by the friendly interactive shell."
 ```
 
 ### Setup and Teardown
@@ -106,12 +106,12 @@ end
 
 The following variables are globally available for all test files:
 
-- `$current_dirname` the directory where the currently running test file is located
-- `$current_filename` the name and extension of the currently running test file
+- `$current_dirname` is the directory where the currently running test file is located.
+- `$current_filename` is the name and extension of the currently running test file.
 
 ## Reporting Options
 
-TAP is a text-based protocol for reporting test results. It's easy to parse for machines and still readable for humans. But it isn't the end of it. If you are looking for reporting alternatives see [this list of reporters](https://github.com/substack/tape#pretty-reporters) or try [tap-mocha-reporter](https://github.com/tapjs/tap-mocha-reporter) for an all-in-one solution.
+TAP is a text-based protocol for reporting test results. It's easy to parse for machines and still readable for humans. But it isn't the end of it. If you are looking for reporting alternatives, see [this list of reporters](https://github.com/substack/tape#pretty-reporters) or try [tap-mocha-reporter](https://github.com/tapjs/tap-mocha-reporter) for an all-in-one solution.
 
 Once you've downloaded a TAP-compliant reporter and put it somewhere in your `$PATH`, pipe `fishtape` to it.
 
