@@ -1,13 +1,10 @@
-# Fishtape
+# Fishtape [![Releases](https://img.shields.io/github/release/jorgebucaran/fishtape.svg?label=&color=0080FF)](https://github.com/jorgebucaran/fishtape/releases/latest) [![Travis CI](https://img.shields.io/travis/jorgebucaran/fishtape.svg?label=)](https://travis-ci.org/jorgebucaran/fishtape)
 
-[![Build Status](https://img.shields.io/travis/jorgebucaran/fishtape.svg)](https://travis-ci.org/jorgebucaran/fishtape)
-[![Releases](https://img.shields.io/github/release/jorgebucaran/fishtape.svg?label=latest)](https://github.com/jorgebucaran/fishtape/releases)
+> <a href=https://testanything.org title="Test Anything Protocol">TAP</a>-based test runner for the [fish shell](https://fishshell.com).
 
-Fishtape is a <a href=https://testanything.org title="Test Anything Protocol">TAP</a>-based test runner for the [fish shell](https://fishshell.com).
+Because your tests run concurrently in their own sub-shells, you can set variables, define functions, and modify the executing environment without hijacking your current session or other tests.
 
-Your tests run concurrently in their own sub-shells, siloing your test environment. That means you are free to set variables, define functions, and modify the executing environment without hijacking your current session or other tests.
-
-There's no learning curve. If you know how to use the [`test`](https://fishshell.com/docs/current/commands.html#test) builtin, you are ready to use Fishtape.
+There's not even a learning curve. If you know how to use the [`test`](https://fishshell.com/docs/current/commands.html#test) builtin, you are ready to use Fishtape.
 
 ## Installation
 
@@ -29,7 +26,7 @@ set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
 curl https://git.io/fishtape.fish --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fishtape.fish
 ```
 
-To uninstall, remove the file.
+To uninstall it, remove `fishtape.fish`.
 
 </details>
 
@@ -111,7 +108,7 @@ The following variables are globally available for all test files:
 
 ## Reporting Options
 
-TAP is a text-based protocol for reporting test results. It's easy to parse for machines and still readable for humans. But it isn't the end of it. If you are looking for reporting alternatives, see [this list of reporters](https://github.com/substack/tape#pretty-reporters) or try [tap-mocha-reporter](https://github.com/tapjs/tap-mocha-reporter) for an all-in-one solution.
+TAP is a simple text-based protocol for reporting test results. It's easy to parse for machines and still readable for humans. If you are looking for reporting alternatives, see [this list of reporters](https://github.com/substack/tape#pretty-reporters) or try [tap-mocha-reporter](https://github.com/tapjs/tap-mocha-reporter) for an all-in-one solution.
 
 Once you've downloaded a TAP-compliant reporter and put it somewhere in your `$PATH`, pipe `fishtape` to it.
 
