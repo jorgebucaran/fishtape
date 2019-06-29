@@ -2,9 +2,7 @@
 
 > <a href=https://testanything.org title="Test Anything Protocol">TAP</a>-based test runner for the [fish shell](https://fishshell.com).
 
-Because your tests run concurrently in their own sub-shells, you can set variables, define functions, and modify the executing environment without hijacking your current session or other tests.
-
-There's not even a learning curve. If you know how to use the [`test`](https://fishshell.com/docs/current/commands.html#test) builtin, you are ready to use Fishtape.
+Because your tests run concurrently in their own sub-shells, you can set variables, define functions, and modify the executing environment without hijacking your current session or other tests. There's not even a learning curve. If you know how to use the [`test`](https://fishshell.com/docs/current/commands.html#test) builtin, you are ready to use Fishtape.
 
 ## Installation
 
