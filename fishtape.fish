@@ -107,12 +107,12 @@ function fishtape -d "TAP-based test runner"
                     print (NR > 1 ? end_batch() ";" : "") begin_batch()
                     id++
                 }
-                !/^[[:space:]]*#/ && $0 {
+                !/^[ \t\r\n\f\v]*#/ && $0 {
                     gsub(/\'/, "\\\\\'")
                     gsub(/\$current_dirname/, d[split(FILENAME, d, /\/[^\/]*$/) - 1])
                     gsub(/\$current_filename/, f[split(FILENAME, f, "/")])
-                    sub(/^[[:space:]]*@mesg/, "fishtape @mesg " id)
-                    sub(/^[[:space:]]*@test/, "functions -q setup; and setup; true; fishtape @test " id)
+                    sub(/^[ \t\r\n\f\v]*@mesg/, "fishtape @mesg " id)
+                    sub(/^[ \t\r\n\f\v]*@test/, "functions -q setup; and setup; true; fishtape @test " id)
                     print
                 }
                 END {
