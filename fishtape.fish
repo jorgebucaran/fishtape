@@ -171,9 +171,8 @@ function fishtape -d "TAP-based test runner"
                 }
             '
 
-            set -l test_status $status
-
+            set -l _status $status
             command rm -f @fishtape$tmp
-            return  $test_status
+            return $_status
     end
 end
