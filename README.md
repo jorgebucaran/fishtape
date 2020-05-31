@@ -1,4 +1,4 @@
-# Fishtape [![Releases](https://img.shields.io/github/release/jorgebucaran/fishtape.svg?label=&color=0080FF)](https://github.com/jorgebucaran/fishtape/releases/latest)
+# Fishtape [![Releases](https://img.shields.io/github/release/jorgebucaran/fishtape.svg?label=&color=0366d6)](https://github.com/jorgebucaran/fishtape/releases/latest)
 
 > <a href=https://testanything.org title="Test Anything Protocol">TAP</a>-based test runner for the [fish shell](https://fishshell.com).
 
