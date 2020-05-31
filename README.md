@@ -8,7 +8,7 @@ Because your tests run concurrently in their own sub-shells, you can set variabl
 
 With [Fisher](https://github.com/jorgebucaran/fisher) (recommended):
 
-```fish
+```console
 fisher add jorgebucaran/fishtape
 ```
 
