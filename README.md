@@ -1,6 +1,6 @@
-# Fishtape [![Releases](https://img.shields.io/github/release/jorgebucaran/fishtape.svg?label=&color=0366d6)](https://github.com/jorgebucaran/fishtape/releases/latest)
+# Fishtape
 
-> <a href=https://testanything.org title="Test Anything Protocol">TAP</a>-based test runner for the [fish shell](https://fishshell.com).
+> <a href=https://testanything.org title="Test Anything Protocol">TAP</a>-based test runner for <a href="https://fishshell.com" title="friendly interactive shell">fish</a>.
 
 Because your tests run concurrently in their own sub-shells, you can set variables, define functions, and modify the executing environment without hijacking your current session or other tests. There's not even a learning curve. If you know how to use the [`test`](https://fishshell.com/docs/current/commands.html#test) builtin, you are ready to use Fishtape.
 
@@ -15,24 +15,17 @@ fisher add jorgebucaran/fishtape
 <details>
 <summary>Not using a package manager?</summary>
 
----
+###
 
 Copy [`fishtape.fish`](fishtape.fish) to any directory on your function path.
 
-```fish
-set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
-curl https://git.io/fishtape.fish --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fishtape.fish
+```console
+curl https://git.io/fishtape.fish --create-dirs -sLo ~/.config/fish/functions/fishtape.fish
 ```
-
-To uninstall it, remove `fishtape.fish`.
 
 </details>
 
-### System Requirements
-
-- [fish](https://github.com/fish-shell/fish-shell) 2.0+
-
-## Usage
+## Getting Started
 
 A test file is a regular `fish` file with `@test` declarations. A test declaration (or test case) consists of a description, followed by one or more operators and their arguments. You can use any operator supported by the [`test`](https://fishshell.com/docs/current/commands.html#test) builtin except for the `-a` and `-o` conditional operators.
 
@@ -52,11 +45,8 @@ A test file is a regular `fish` file with `@test` declarations. A test declarati
 
 Run `fishtape` with one or more test files to run your tests.
 
-```sh
+```console
 fishtape tests/*.fish
-```
-
-```diff
 TAP version 13
 ok 1 math is real
 ok 2 basename is fish
