@@ -13,4 +13,4 @@ jobs:
           sudo apt-get -y install fish
       - run: |
           curl git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
-          fish -c "fisher add . && fishtape test/*.fish"
+          fish -c "fisher install . && fishtape test/*.fish"
