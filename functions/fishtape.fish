@@ -5,15 +5,15 @@ function fishtape -d "TAP-based test runner"
         end
     end
     switch "$argv[1]"
-        case {,-}-h{elp,} ""
-            echo "usage: fishtape <files...>    Run tests in <files>"
-            echo "       fishtape --help        Show this help"
-            echo "       fishtape --version     Show the current version"
-            echo "examples:"
+        case "" -h --help
+            echo "Usage: fishtape <files...>  Run tests in files"
+            echo "Options:"
+            echo "       fishtape --help      Print this help message"
+            echo "       fishtape --version   Show the current version"
+            echo "Examples:"
             echo "       fishtape <test.fish"
             echo "       fishtape test/*.fish"
-            echo "       fish -c \"fishtape test/*.fish\" | tap-nyan"
-        case {,-}-v{ersion,}
+        case -v --version
             echo "fishtape, version 2.1.3"
         case @mesg
             echo -s {$argv[2],mesg,$argv[3]}\t
