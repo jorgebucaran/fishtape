@@ -1,5 +1,3 @@
-set -g fishtape_version 2.1.3
-
 function fishtape -d "TAP-based test runner"
     if not isatty
         if not contains -- $argv @{test,mesg}
@@ -16,7 +14,7 @@ function fishtape -d "TAP-based test runner"
             echo "       fishtape test/*.fish"
             echo "       fish -c \"fishtape test/*.fish\" | tap-nyan"
         case {,-}-v{ersion,}
-            echo "fishtape version $fishtape_version"
+            echo "fishtape, version 2.1.3"
         case @mesg
             echo -s {$argv[2],mesg,$argv[3]}\t
         case @test
