@@ -1,29 +1,16 @@
 # Fishtape
 
-> <a href=https://testanything.org title="Test Anything Protocol">TAP</a>-based test runner for <a href="https://fishshell.com" title="friendly interactive shell">fish</a>.
+> <a href=https://testanything.org title="Test Anything Protocol">TAP</a>-based testing for [Fish](https://fishshell.com).
 
-Because your tests run concurrently in their own sub-shells, you can set variables, define functions, and modify the executing environment without hijacking your current session or other tests. There's not even a learning curve. If you know how to use the [`test`](https://fishshell.com/docs/current/commands.html#test) builtin, you are ready to use Fishtape.
+Fishtape is a Test-Anything-Protocol test runner. Your tests run concurrently in their own sub-shells—you can set variables, define functions, and modify the executing environment without hijacking the current session or other tests. No learning curve. If you know how to use [`test`](https://fishshell.com/docs/current/commands.html#test), you can start using Fishtape now.
 
 ## Installation
 
-With [Fisher](https://github.com/jorgebucaran/fisher) (recommended):
+Install with [Fisher](https://github.com/jorgebucaran/fisher):
 
 ```console
-fisher add jorgebucaran/fishtape
+fisher install jorgebucaran/fishtape
 ```
-
-<details>
-<summary>Not using a package manager?</summary>
-
-###
-
-Copy [`fishtape.fish`](fishtape.fish) to any directory on your function path.
-
-```console
-curl https://git.io/fishtape.fish --create-dirs -sLo ~/.config/fish/functions/fishtape.fish
-```
-
-</details>
 
 ## Getting Started
 
