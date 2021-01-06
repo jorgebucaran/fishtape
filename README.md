@@ -2,7 +2,7 @@
 
 > <a href=https://testanything.org title="Test Anything Protocol">TAP</a>-based testing for [Fish](https://fishshell.com).
 
-Fishtape is a Test-Anything-Protocol test runner. Your tests run concurrently in their own sub-shells—you can set variables, define functions, and modify the executing environment without hijacking the current session or other tests. No learning curve. If you know how to use [`test`](https://fishshell.com/docs/current/commands.html#test), you can start using Fishtape now.
+Fishtape is a Test-Anything-Protocol test runner. Because each test runs concurrently in its own sub-shell, you can define functions, set variables, and modify the executing environment without hijacking the current session or other tests. What learning curve? If you know how to use [`test`](https://fishshell.com/docs/current/commands.html#test), you can start using Fishtape now.
 
 ## Installation
 
