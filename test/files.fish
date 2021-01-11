@@ -1,15 +1,11 @@
-@mesg $current_filename
+@echo === files ===
 
-function setup
-    set -g tmp_dir (command mktemp -d /tmp/foo.XXXX)
-end
+set temp (command mktemp -d)
 
-function teardown
-    command rm -rf $tmp_dir
-end
+builtin cd $temp
 
-@test "file exists" (touch $tmp_dir/file) -e $tmp_dir/file
-@test "file is regular" (touch $tmp_dir/file) -f $tmp_dir/file
-@test "file is empty" (touch $tmp_dir/file) ! -s $tmp_dir/file
-@test "file is non-empty" (echo foo > $tmp_dir/file) -s $tmp_dir/file
-@test "file is a directory" -d $tmp_dir
+@test "a directory" -d $temp
+@test "a regular file" (command touch file) -f file
+@test "nothing to see here" -z (read <file)
+
+command rm -rf $temp

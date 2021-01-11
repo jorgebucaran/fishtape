@@ -1,2 +1,2 @@
-complete --command fishtape --long version --description "Print version"
-complete --command fishtape --long help --description "Print help"
+complete --command fishtape --short v --long version --description "Print version"
+complete --command fishtape --short h --long help --description "Print help"

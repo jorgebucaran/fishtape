@@ -1,41 +1,21 @@
-@mesg $current_filename
+@echo === tap ===
 
-@test "version" (
-    echo '@test -- -z ""' | fishtape | command awk 'NR == 1'
-) = "TAP version 13"
-
-@test "passed" (
-  echo '@test -- -z ""' | fishtape
-) = "TAP version 13 ok 1 --  1..1 # pass 1 # ok"
-
-@test "failed" (
-  echo '@test -- ! -z ""' | fishtape | command awk 'END { print }'
-) = "# fail 1"
-
-@test "operator" (
-  echo '@test -- -n ""' | fishtape | command awk 'gsub(/ *operator: */, "")'
-) = "-n"
-
-@test "!operator" (
-  echo '@test -- ! -z ""' | fishtape | command awk 'gsub(/ *operator: */, "")'
-) = "!-z"
-
-@test "actual" -z (
-  echo '@test -- -n ""' | fishtape | command awk 'gsub(/ *actual: */, "")'
+set temp (command mktemp -d)
+set tap (
+  do_fail=true HOME=$temp fish \
+    --init-command=(functions fishtape | string collect) \
+    --command="fishtape test/status.fish"
 )
 
-@test "expected" (
-  echo '@test -- -n ""' | fishtape | command awk 'gsub(/ *expected: */, "")'
-) = "a non-zero length string"
+@test "tap" $tap[4] = "ok 2 true"
+@test "tap" $tap[8] = "not ok 6 fail"
+@test "tap" $tap[9] = "  ---"
+@test "tap" $tap[10] = "    operator: -eq"
+@test "tap" $tap[11] = "    expected: 0"
+@test "tap" $tap[12] = "    actual: 1"
+@test "tap" $tap[14] = "  ..."
+@test "tap" $tap[16] = "1..6"
+@test "tap" $tap[17] = "# pass 5"
+@test "tap" "$tap[18]" = "# fail 1"
 
-@test "invalid operator" (
-  echo '@test -- foo bar baz' | fishtape | command awk 'gsub(/ *expected: */, "")'
-) = "a valid operator"
-
-@test "todo" (
-  echo '@test wip' | fishtape | command awk 'END { print }'
-) = "# todo 1"
-
-@test "mesg" (
-  echo '@mesg hello' | fishtape | command awk 'NR == 2'
-) = "# hello"
+command rm -rf $temp

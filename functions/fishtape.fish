@@ -1,173 +1,110 @@
-function fishtape -d "TAP-based test runner"
-    if not isatty
-        if not contains -- $argv @{test,mesg}
-            set argv $argv -
-        end
-    end
-    switch "$argv[1]"
-        case "" -h --help
-            echo "Usage: fishtape <files...>  Run tests in files"
-            echo "Options:"
-            echo "       fishtape --help      Print this help message"
-            echo "       fishtape --version   Show the current version"
-            echo "Examples:"
-            echo "       fishtape <test.fish"
-            echo "       fishtape test/*.fish"
+function fishtape --description "Test scripts, functions, and plugins in Fish"
+    switch "$argv"
         case -v --version
-            echo "fishtape, version 2.1.3"
-        case @mesg
-            echo -s {$argv[2],mesg,$argv[3]}\t
-        case @test
-            if set -q argv[4]
-                set -l rest (printf "%s\n" $argv[4..-1] | command awk '
-                    BEGIN { i = 0 }
-                    {
-                        if (NR == 1 && $0 == "!") {
-                            not = "!"
-                        } else if (NR <= 2 && !operator && /^-(n|z|b|c|d|e|f|g|G|k|L|O|p|r|s|S|t|u|w|x)$/) {
-                            operator = $0
-                        } else if (NR > 1 && !i && !(not && NR == 2) && /^(!?=|-(eq|ne|gt|ge|lt|le))$/) {
-                            a[i] = operator ? (a[i] ? a[i] " " : "") operator : a[i]
-                            operator = $0
-                            i++
-                        } else {
-                            a[i] = (a[i] ? a[i]" " : "") $0
-                        }
-                    }
-                    END {
-                        print not operator "\n" a[0] "\n" (i ? a[i]\
-                            : operator == "-n" ? "a non-zero length string"\
-                            : operator == "-z" ? "a zero length string"\
-                            : operator == "-b" ? "a block device"\
-                            : operator == "-c" ? "a character device"\
-                            : operator == "-d" ? "a directory"\
-                            : operator == "-e" ? "an existing file"\
-                            : operator == "-f" ? "a regular file"\
-                            : operator == "-g" ? "a file with the set-group-ID bit set"\
-                            : operator == "-G" ? "a file with same group ID as the current user"\
-                            : operator == "-L" ? "a symbolic link"\
-                            : operator == "-O" ? "a file owned by the current user"\
-                            : operator == "-p" ? "a named pipe"\
-                            : operator == "-r" ? "a file marked as readable"\
-                            : operator == "-s" ? "a file of size greater than zero"\
-                            : operator == "-S" ? "a socket"\
-                            : operator == "-t" ? "a terminal tty file descriptor"\
-                            : operator == "-u" ? "a file with the set-user-ID bit set"\
-                            : operator == "-w" ? "a file marked as writable"\
-                            : operator == "-x" ? "a file marked as executable"\
-                            : "a valid operator") "\n"\
-                            (not ? not "\n" : "") (i ? a[0] "\n" operator "\n" a[1] : operator "\n" a[0])
-                    }
-                ')
-                if test $rest[4..-1] 2>/dev/null
-                    echo -s {$argv[2],1,$argv[3]}\t
-                else
-                    echo -s {$argv[2],0,$argv[3],$rest[1],$rest[2],$rest[3]}\t
-                end
-                functions -q teardown; and teardown
-            else
-                echo -s {$argv[2],todo,$argv[3]\ \#\ TODO}\t
-            end
+            echo "fishtape, version 3.0.0"
+        case "" -h --help
+            echo "Usage: fishtape <files ...>  Run test files"
+            echo "Options:"
+            echo "       -v or --version  Print version"
+            echo "       -h or --help     Print this help message"
         case \*
-            set -l files (printf "%s\n" $argv | command awk -v PWD="$PWD" '
-                /^-$/ {
-                    print; next
-                }
-                {
-                    n = split((/^\// ? "" : PWD "/") $0, tree, "/")
-                    for (i = k = 0; ++i <= n; ) {
-                        node = tree[i]
-                        k += (_k = node == ".." ? k ? -1 : 0 : node && node != "." ? 1 : 0)
-                        path[k] = _k > 0 ? node : path[k]
-                    }
-                    out = ""
-                    for (i = 1; i <= k || !out; i++) {
-                        out = out "/" path[i]
-                    }
-                    print out
-                }
-            ')
+            set --local files (realpath $argv)
 
             for file in $files
-                if test $file != - -a ! -f $file
-                    echo "fishtape: can't open file \"$file\" -- is this a valid file?"
+                if test ! -f $file
+                    echo "fishtape: Invalid file or file not found: \"$file\"" >&2
                     return 1
                 end
             end
 
-            set -l tmp (random)
+            set --local operators -{n,z,b,c,d,e,f,g,G,k,L,O,p,r,s,S,t,u,w,x}
+            set --local expectations \
+                "a non-zero length string" \
+                "a zero length string" \
+                "a block device" \
+                "a character device" \
+                "a directory" \
+                "an existing file" \
+                "a regular file" \
+                "a file with the set-group-ID bit set" \
+                "a file with same group ID as the current user" \
+                "a file with the sticky bit set" \
+                "a symbolic link" \
+                "a file owned by the current user" \
+                "a named pipe" \
+                "a file marked as readable" \
+                "a file of size greater than zero" \
+                "a socket" \
+                "a terminal tty file descriptor" \
+                "a file with the set-user-ID bit set" \
+                "a file marked as writable" \
+                "a file marked as executable"
 
-            command awk '
-                FNR == 1 {
-                    print (NR > 1 ? end_batch() ";" : "") begin_batch()
-                    id++
-                }
-                !/^[ \t\r\n\f\v]*#/ && $0 {
-                    gsub(/\'/, "\\\\\'")
-                    gsub(/\$current_dirname/, d[split(FILENAME, d, /\/[^\/]*$/) - 1])
-                    gsub(/\$current_filename/, f[split(FILENAME, f, "/")])
-                    sub(/^[ \t\r\n\f\v]*@mesg/, "fishtape @mesg " id)
-                    sub(/^[ \t\r\n\f\v]*@test/, "functions -q setup; and setup; true; fishtape @test " id)
-                    print
-                }
-                END {
-                    print end_batch() ";while for j in $jobs;contains -- $j " jobs() ";and break;end;end"
-                }
-                function begin_batch() {
-                    return "fish -c \'"
-                }
-                function end_batch() {
-                    return "echo " id "\'&;set -l jobs $jobs " jobs(" -l")
-                }
-                function jobs(opt) {
-                    return "(jobs" opt " | command awk \'/^[0-9]+\\\t/ { print $1 }\')"
-                }
-            ' $files >@fishtape$tmp
+            set --universal _fishtape_test_number 0
+            set --universal _fishtape_test_passed 0
+            set --universal _fishtape_test_failed 0
 
-            fish @fishtape$tmp | command awk -F\t '
-                BEGIN {
-                    print "TAP version 13"
-                }
-                NF == 1 {
-                    for (i = 0; i < count[$1]; i++) {
-                        print\
-                            (mesg = batch[$1 i "mesg"])\
-                            ? mesg : sub(/ok/, "ok " (++total), batch[$1 i])\
-                            ? batch[$1 i] ((error = batch[$1 i "error"]) && ++failed ? "\n" error : "") : ""
-                        todo = (batch[$1 i "todo"]) ? todo + 1 : todo
-                        fflush()
-                    }
-                }
-                NF > 1 {
-                    id = $1 count[$1]++
-                    if ($2 == "mesg") {
-                        batch[id $2] = "# " $3
-                    } else if ($2) {
-                        batch[id] = batch[id $2] = "ok " $3
-                    } else {
-                        batch[id] = "not ok " $3
-                        batch[id "error"] =\
-                            "  ---\n"\
-                            "    operator: "$4 "\n"\
-                            "    expected: "$6 "\n"\
-                            "    actual:   "$5 "\n"\
-                            "  ..."
-                    }
-                }
-                END {
-                    print "\n1.." total
-                    print "# pass " (total - failed - todo)
+            function @echo
+                echo "# $argv"
+            end
 
-                    if (failed) print "# fail " failed
-                    if (todo) print "# todo " todo
-                    else if (!failed) print "# ok"
+            function @test --argument-names name --inherit-variable operators --inherit-variable expectations
+                set --erase argv[1]
+                set --query argv[2] || set --append argv ""
 
-                    exit (failed > 0)
-                }
-            '
+                set _fishtape_test_number (math $_fishtape_test_number + 1)
 
-            set -l _status $status
-            command rm -f @fishtape$tmp
-            return $_status
+                if test $argv
+                    set _fishtape_test_passed (math $_fishtape_test_passed + 1)
+
+                    echo "ok $_fishtape_test_number $name"
+                else
+                    set _fishtape_test_failed (math $_fishtape_test_failed + 1)
+
+                    status print-stack-trace |
+                        string replace --filter --regex -- "\s+called on line (\d+) of file (.+)" '$2:$1' |
+                        read --local at
+
+                    if set --query argv[3]
+                        set operator $argv[2]
+                        set expected (string escape -- $argv[3])
+                        set actual (string escape -- $argv[1])
+                    else
+                        set operator $argv[1]
+                        set expected $expectations[(contains --index -- $operator $operators)]
+                        set actual (string escape -- $argv[2])
+                    end
+
+                    echo "not ok $_fishtape_test_number $name"
+                    echo "  ---"
+                    echo "    operator: $operator"
+                    echo "    expected: $expected"
+                    echo "    actual: $actual"
+                    echo "    at: $at"
+                    echo "  ..."
+                end
+            end
+
+            echo TAP version 13
+
+            for file in $files
+                fish --init-command=(functions @echo | string collect) --init-command=(functions @test | string collect) $file
+            end
+
+            echo
+            echo "1..$_fishtape_test_number"
+            echo "# pass $_fishtape_test_passed"
+            test $_fishtape_test_failed -eq 0 &&
+                echo "# ok" ||
+                echo "# fail $_fishtape_test_failed"
+
+            functions --erase @echo @test
+
+            set --local failed $_fishtape_test_failed
+            set --erase _fishtape_test_number
+            set --erase _fishtape_test_passed
+            set --erase _fishtape_test_failed
+
+            test $failed -eq 0
     end
 end

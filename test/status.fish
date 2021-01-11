@@ -1,13 +1,9 @@
-@mesg $current_filename
+@echo === status ===
 
+@test "default" $status -eq 0
 @test "true" (true) $status -eq 0
 @test "false" (false) $status -eq 1
-@test "return 2" (
-    function foo
-        return 2
-    end
-    foo
-) $status -eq 2
+@test "pipestatus" (true | false | true) "$pipestatus" = "0 1 0"
+@test 255 (fish --command "exit 255") $status -eq 255
 
-false
-@test "reset status" $status -eq 0
+set --query do_fail[1] && @test fail 1 -eq 0
