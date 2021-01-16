@@ -4,7 +4,7 @@ set temp (command mktemp -d)
 set tap (
   do_fail=true HOME=$temp fish \
     --init-command=(functions fishtape | string collect) \
-    --command="fishtape test/status.fish"
+    --command="fishtape tests/status.fish"
 )
 
 @test "tap" $tap[4] = "ok 2 true"
