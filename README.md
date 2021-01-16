@@ -5,6 +5,8 @@
 Fishtape is a <a href=https://testanything.org title="Test Anything Protocol">Test Anything Protocol</a> compliant test runner for Fish. Use it to test anything: scripts, functions, plugins without ever leaving your favorite shell. Here's the first example to get you started:
 
 ```fish
+@test "has a config.fish file" -e ~/.config/fish/config.fish
+
 @test "the ultimate question" (math "6 * 7") -eq 42
 
 @test "got root?" $USER = root
@@ -15,17 +17,18 @@ Now put that in a `fish` file and run it with `fishtape` installed. Behold, the 
 ```console
 $ fishtape example.fish
 TAP version 13
-ok 1 the ultimate question
-not ok 2 got root?
+ok 1 has a config.fish file
+ok 2 the ultimate question
+not ok 3 got root?
   ---
     operator: =
     expected: root
     actual: jb
-    at: ~/example.fish:3
+    at: ~/fishtape/tests/example.fish:5
   ...
 
-1..2
-# pass 1
+1..3
+# pass 2
 # fail 1
 ```
 
@@ -45,11 +48,11 @@ fisher install jorgebucaran/fishtape
 
 Tests are defined with the `@test` function. Each test begins with a description, followed by a typical `test` expression. Refer to the `test` builtin [documentation](https://fishshell.com/docs/current/cmds/test.html) for operators and usage details.
 
-> Operators to combine expressions are not currently supported: `!`, `-a`, `-o`.
+<pre>
+@<a href=#writing-tests>test</a> <i>description</i> [<i>actual</i>] <a href=https://fishshell.com/docs/current/cmds/test.html#operators-for-files-and-directories>operator</a> <i>expected</i>
+</pre>
 
-```fish
-@test "has a config.fish file" -e ~/.config/fish/config.fish
-```
+> Operators to combine expressions are not currently supported: `!`, `-a`, `-o`.
 
 Sometimes you need to test the exit status of running one or more commands and for that, you use command substitutions. Just make sure to suppress stdout to avoid cluttering your `test` expression.
 
