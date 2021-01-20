@@ -70,7 +70,7 @@ function fishtape --description "Test scripts, functions, and plugins in Fish"
                         set expected "not "$expectations[(contains --index -- $argv[2] $operators)]
                         set actual (string escape -- $argv[3])
                     else if set --query argv[3]
-                        set operator "$operator"$argv[2]
+                        set operator $argv[2]
                         set expected (string escape -- $argv[3])
                         set actual (string escape -- $argv[1])
                     else
