@@ -75,7 +75,7 @@ function fishtape --description "Test scripts, functions, and plugins in Fish"
                         set actual (string escape -- $argv[1])
                     else
                         set operator $argv[1]
-                        set expected $expectations[(contains --index -- $argv[1] $operators)]
+                        set expected $expectations[(contains --index -- $operator $operators)]
                         set actual (string escape -- $argv[2])
                     end
 
