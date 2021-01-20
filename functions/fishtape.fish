@@ -67,6 +67,7 @@ function fishtape --description "Test scripts, functions, and plugins in Fish"
 
                     if test $argv[1] = "!"
                         set operator "! "
+                        set negation "not "
                         set --erase argv[1]
                     end
 
@@ -76,7 +77,7 @@ function fishtape --description "Test scripts, functions, and plugins in Fish"
                         set actual (string escape -- $argv[1])
                     else
                         set operator "$operator"$argv[1]
-                        set expected $expectations[(contains --index -- $operator $operators)]
+                        set expected "$negation"$expectations[(contains --index -- $argv[1] $operators)]
                         set actual (string escape -- $argv[2])
                     end
 
