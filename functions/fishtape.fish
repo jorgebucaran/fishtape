@@ -59,15 +59,9 @@ function fishtape --description "Test scripts, functions, and plugins in Fish"
 
                     echo "ok $_fishtape_test_number $name"
                 else
-                    set _fishtape_test_failed (math $_fishtape_test_failed + 1)
-
-                    status print-stack-trace |
-                        string replace --filter --regex -- "\s+called on line (\d+) of file (.+)" '$2:$1' |
-                        read --local at
-
                     if test $argv[1] = "!"
                         set operator "! "
-                        set negation "not "
+                        set expected "not "
                         set --erase argv[1]
                     end
 
@@ -77,9 +71,15 @@ function fishtape --description "Test scripts, functions, and plugins in Fish"
                         set actual (string escape -- $argv[1])
                     else
                         set operator "$operator"$argv[1]
-                        set expected "$negation"$expectations[(contains --index -- $argv[1] $operators)]
+                        set expected "$expected"$expectations[(contains --index -- $argv[1] $operators)]
                         set actual (string escape -- $argv[2])
                     end
+
+                    set _fishtape_test_failed (math $_fishtape_test_failed + 1)
+
+                    status print-stack-trace |
+                        string replace --filter --regex -- "\s+called on line (\d+) of file (.+)" '$2:$1' |
+                        read --local at
 
                     echo "not ok $_fishtape_test_number $name"
                     echo "  ---"
