@@ -1,7 +1,7 @@
 function fishtape --description "Test scripts, functions, and plugins in Fish"
     switch "$argv"
         case -v --version
-            echo "fishtape, version 3.0.0"
+            echo "fishtape, version 3.0.1"
         case "" -h --help
             echo "Usage: fishtape <files ...>  Run test files"
             echo "Options:"
