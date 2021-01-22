@@ -65,13 +65,19 @@ function fishtape --description "Test scripts, functions, and plugins in Fish"
                         string replace --filter --regex -- "\s+called on line (\d+) of file (.+)" '$2:$1' |
                         read --local at
 
+                    if test $argv[1] = "!"
+                        set operator "! "
+                        set negation "not "
+                        set --erase argv[1]
+                    end
+
                     if set --query argv[3]
-                        set operator $argv[2]
+                        set operator "$operator"$argv[2]
                         set expected (string escape -- $argv[3])
                         set actual (string escape -- $argv[1])
                     else
-                        set operator $argv[1]
-                        set expected $expectations[(contains --index -- $operator $operators)]
+                        set operator "$operator"$argv[1]
+                        set expected "$negation"$expectations[(contains --index -- $argv[1] $operators)]
                         set actual (string escape -- $argv[2])
                     end
 

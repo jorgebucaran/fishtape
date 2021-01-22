@@ -52,7 +52,7 @@ Tests are defined with the `@test` function. Each test begins with a description
 @<a href=#writing-tests>test</a> <i>description</i> [<i>actual</i>] <a href=https://fishshell.com/docs/current/cmds/test.html#operators-for-files-and-directories>operator</a> <i>expected</i>
 </pre>
 
-> Operators to combine expressions are not currently supported: `!`, `-a`, `-o`.
+> Operators to combine expressions are not currently supported: `-a`, `-o`.
 
 Sometimes you need to test the exit status of running one or more commands and for that, you use command substitutions. Just make sure to suppress stdout to avoid cluttering your `test` expression.
 
