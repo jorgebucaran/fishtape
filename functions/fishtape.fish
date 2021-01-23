@@ -14,6 +14,9 @@ function fishtape --description "Test scripts, functions, and plugins in Fish"
                 if test ! -f $file
                     echo "fishtape: Invalid file or file not found: \"$file\"" >&2
                     return 1
+                else if ! fish --no-execute $file
+                    echo "fishtape: Syntax errors found in file: \"$file\"" >&2
+                    return 1
                 end
             end
 
