@@ -18,5 +18,6 @@ jobs:
         run: |
           curl -sL https://git.io/fisher | source
           fisher install $GITHUB_WORKSPACE
-          fishtape tests/*
+          fishtape tests/invdalid.fish || true # should fail
+          fishtape (string match -v '*invalid*' -- tests/*)
         shell: fish {0}
