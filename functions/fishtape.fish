@@ -94,7 +94,8 @@ function fishtape --description "Test scripts, functions, and plugins in Fish"
             echo TAP version 13
 
             for file in $files
-                fish --init-command=(functions @echo | string collect) --init-command=(functions @test | string collect) $file
+                fish --init-command=(functions @echo | string collect) --init-command=(functions @test | string collect) $file \
+                    || set _fishtape_test_failed (math $_fishtape_test_failed + 1)
             end
 
             echo
