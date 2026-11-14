@@ -101,8 +101,7 @@ function @test --argument-names description
         for key in $keys at
             set --local value "$$key"
 
-            if string match --quiet -- \*\n\* $value &&
-                    not string match --quiet --regex -- '(?!\n)[[:cntrl:]]|\n$' $value
+            if string match --quiet -- \*\n\* $value && ! string match --quiet --regex -- '(?!\n)[[:cntrl:]]|\n$' $value
                 set --local indent (string match --quiet -- ' *' $value && echo 2)
                 echo "    $key: |$indent-"
                 printf "      %s\n" (string split -- \n $value)
