@@ -5,18 +5,18 @@ on: push
 jobs:
   test:
     runs-on: ubuntu-latest
+    container: ${{ matrix.image }}
+
+    strategy:
+      matrix:
+        image:
+          - alpine:3.17
+          - alpine:3.20
+          - alpine:3.22
+          - alpine:edge
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Install Fish
-        run: |
-          sudo apt-add-repository -yn ppa:fish-shell/release-3
-          sudo apt-get update
-          sudo apt-get install -y fish
-
-      - name: Install Tools
-        run: |
-          curl -sL https://git.io/fisher | source
-          fisher install $GITHUB_WORKSPACE
-          fishtape tests/*
+      - uses: actions/checkout@v4
+      - run: apk add --no-cache fish
+      - run: source functions/fishtape.fish && fishtape tests/*.fish
         shell: fish {0}
