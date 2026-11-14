@@ -7,7 +7,6 @@ Fishtape tests your Fish scripts, functions and plugins without ever leaving you
 - Prints readable results as tests run, in standard [TAP](https://testanything.org)
 - Runs tests against a temporary configuration, not yours
 - Tests your latest edits without reinstalling the plugin
-- Fail runs that exit early, crash or don't parse
 
 ## Installation
 
@@ -19,7 +18,7 @@ fisher install jorgebucaran/fishtape
 
 ## Writing tests
 
-Write a test as `@test`, a description, and a `test` expression.
+Write a test as `@test`, a description and a `test` expression.
 
 ```fish
 @test "the ultimate question" (math "6 * 7") -eq 42
@@ -83,7 +82,7 @@ Print messages with `@echo`, not `echo`. `@echo` writes them as TAP comments, wh
 
 Fishtape runs test files one at a time, each in a new shell with temporary `HOME`, `TMPDIR` and XDG base directories. The shell doesn't load your configuration or installed plugins. Your working directory and other environment variables, like `PATH`, stay as they are.
 
-Fishtape cleans up each file's temporary directories when it's done, so tests can write to `$HOME` or `$TMPDIR` without cluttering your system.
+Fishtape removes each file's temporary directories after the file runs, so tests can write to `$HOME` or `$TMPDIR` without cluttering your system.
 
 ```fish
 cd $TMPDIR
@@ -93,9 +92,9 @@ git init --quiet --initial-branch=main
 @test "shows the branch" "$(fish_git_prompt)" = " (main)"
 ```
 
-Anything they write anywhere else, such as your working directory, is yours to remove.
+Anything tests write anywhere else, such as your working directory, is yours to remove.
 
-If a test file is missing, nothing runs and `fishtape` exits with status 1.
+If all the tests pass, `fishtape` exits with status 0. If there are any failures, `fishtape` exits with status 1. If a test file is missing, nothing runs and `fishtape` exits with status 1.
 
 ## Testing a plugin
 
@@ -119,7 +118,7 @@ Then run them with `fishtape` from anywhere:
 fishtape ~/ponyo/tests/*.fish
 ```
 
-Before each test file runs, Fishtape adds your plugin's `functions` and `completions` directories to Fish's search paths and sources the files in its `conf.d`. It doesn't install the plugin, so Fisher's [events](https://github.com/jorgebucaran/fisher#event-system) don't fire. Emit the ones you need at the top of your test file:
+Before each test file runs, Fishtape adds your plugin's `functions` and `completions` directories to Fish's search paths and sources the files in its `conf.d`. Fishtape doesn't install the plugin, so Fisher's [events](https://github.com/jorgebucaran/fisher#event-system) don't fire. Emit the ones you need at the top of your test file:
 
 ```fish
 emit ponyo_install
@@ -127,7 +126,7 @@ emit ponyo_install
 
 ## Failures
 
-A test file fails when it doesn't run to the end: when it has a syntax error, calls `exit`, or gets killed. Fishtape reports it as a failed test and moves on to the next file.
+A test file fails when it has a syntax error, calls `exit`, gets killed or ends with a nonzero status. Fishtape reports it as a failed test and moves on to the next file.
 
 ```console
 not ok 4 tests/ponyo.fish
@@ -136,17 +135,15 @@ not ok 4 tests/ponyo.fish
   ...
 ```
 
-If any test or file fails, `fishtape` exits with status 1.
-
-To stop a file early without failing it, use `return` instead of `exit`:
+To end a test file early, use `return` instead of `exit`.
 
 ```fish
-command --query kubectl || return
+command --query kubectl || return 0
 ```
 
 ## Output
 
-Fishtape prints [TAP version 14](https://testanything.org/tap-version-14-specification.html). Read it as it is, or pipe it into any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters).
+Fishtape prints [TAP version 14](https://testanything.org/tap-version-14-specification.html). Read the output as it is, or pipe it into any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters).
 
 ```console
 fishtape tests/*.fish | tap-nyan
