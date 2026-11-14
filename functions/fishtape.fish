@@ -32,12 +32,14 @@ function fishtape --description "A test runner for Fish"
                 read --line total failed done <$temp/result
                 command rm -rf $temp
 
-                if test -z "$done"
+                if test -z "$done" || test $code -ne 0
                     set total (math $total + 1)
                     set failed (math $failed + 1)
                     echo "not ok $total "(string replace --all --regex -- '[\\\\#]' '\\\\$0' $file)
                     echo "  ---"
-                    echo "    message: \"exited with status $code before the end of the file\""
+                    test -n "$done" &&
+                        echo "    message: \"ended with status $code\"" ||
+                        echo "    message: \"exited with status $code before the end of the file\""
                     echo "  ..."
                 end
             end
@@ -126,10 +128,11 @@ end
 function exit
     set --local code $argv $status
     set --local sources (LC_ALL=C status print-stack-trace | string match -- 'from sourcing file *')
-    set --query sources[2] || set --global _fishtape_exit $code[1]
+    set --query sources[2] || set --global _fishtape_exit
     builtin exit $code[1]
 end
 
 source $argv[1]
-set --query _fishtape_exit && builtin exit $_fishtape_exit
-echo done >>$_fishtape_result
+set --local code $status
+set --query _fishtape_exit || echo done >>$_fishtape_result
+builtin exit $code

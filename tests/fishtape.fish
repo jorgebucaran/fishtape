@@ -166,7 +166,7 @@ not ok 6 lines with a final newline
 
 @echo Failures
 
-@test "ignores a sourced exit and a failing last command" "$(fishtape source.fish)" = 'TAP version 14
+@test "ignores a sourced exit" "$(fishtape source.fish)" = 'TAP version 14
 ok 1 keeps going
 
 1..1
@@ -181,6 +181,17 @@ ok 1 before
 1..1
 # pass 1
 # ok'
+
+@test "fails a file that ends with a nonzero status" "$(fishtape status.fish)" = 'TAP version 14
+ok 1 before
+not ok 2 status.fish
+  ---
+    message: "ended with status 1"
+  ...
+
+1..2
+# pass 1
+# fail 1'
 
 set output "$(fishtape exit.fish passing.fish)"
 @test "exits with 1 if a file calls exit" $status -eq 1
