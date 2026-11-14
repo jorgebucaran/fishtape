@@ -1,30 +1,47 @@
 # Fishtape
 
-> 100% _pure_-[Fish](https://fishshell.com) test runner.
+> A test runner for [Fish](https://fishshell.com), the friendly interactive shell.
 
-Fishtape is a <a href=https://testanything.org title="Test Anything Protocol">Test Anything Protocol</a> compliant test runner for Fish. Use it to test anything: scripts, functions, plugins without ever leaving your favorite shell. Here's the first example to get you started:
+Fishtape tests your Fish scripts, functions and plugins without ever leaving your favorite shell. Each test checks an ordinary [`test`](https://fishshell.com/docs/current/cmds/test.html) expression, the kind you already write in `if` conditions. There's no assertion language to learn.
 
-```fish
-@test "has a config.fish file" -e ~/.config/fish/config.fish
+- Prints readable results as tests run, in standard [TAP](https://testanything.org)
+- Runs tests against a temporary configuration, not yours
+- Tests your latest edits without reinstalling the plugin
+- Fail runs that exit early, crash or don't parse
 
-@test "the ultimate question" (math "6 * 7") -eq 42
+## Installation
 
-@test "got root?" $USER = root
-```
-
-Now put that in a `fish` file and run it with `fishtape` installed. Behold, the TAP stream!
+Fishtape needs Fish 3.5 or newer. Install it with [Fisher](https://github.com/jorgebucaran/fisher):
 
 ```console
-$ fishtape example.fish
-TAP version 13
-ok 1 has a config.fish file
-ok 2 the ultimate question
-not ok 3 got root?
+fisher install jorgebucaran/fishtape
+```
+
+## Writing tests
+
+Write a test as `@test`, a description, and a `test` expression.
+
+```fish
+@test "the ultimate question" (math "6 * 7") -eq 42
+
+@test "uppercases a word" (string upper fish) = FISH
+
+@test "runs as root" $USER = root
+```
+
+Save them in `tests/example.fish` and run it with `fishtape`.
+
+```console
+$ fishtape tests/example.fish
+TAP version 14
+ok 1 the ultimate question
+ok 2 uppercases a word
+not ok 3 runs as root
   ---
-    operator: =
-    expected: root
-    actual: jb
-    at: ~/fishtape/tests/example.fish:5
+    operator: "="
+    expected: "root"
+    actual: "jb"
+    at: "/home/jb/project/tests/example.fish:5"
   ...
 
 1..3
@@ -32,74 +49,107 @@ not ok 3 got root?
 # fail 1
 ```
 
-> See [reporting options](#reporting-options) for alternatives to TAP output.
+Fishtape reports the left side of a comparison as `actual` and the right side as `expected`. Write `$USER = root`, not `root = $USER`.
 
-Each test file runs inside its own shell, so you can modify the global environment without cluttering your session or breaking other tests. If all the tests pass, `fishtape` exits with `0` or `1` otherwise.
+### Checking exit status
 
-## Installation
-
-Install with [Fisher](https://github.com/jorgebucaran/fisher):
-
-```console
-fisher install jorgebucaran/fishtape
-```
-
-## Writing Tests
-
-Tests are defined with the `@test` function. Each test begins with a description, followed by a typical `test` expression. Refer to the `test` builtin [documentation](https://fishshell.com/docs/current/cmds/test.html) for operators and usage details.
-
-<pre>
-@<a href=#writing-tests>test</a> <i>description</i> [<i>actual</i>] <a href=https://fishshell.com/docs/current/cmds/test.html#operators-for-files-and-directories>operator</a> <i>expected</i>
-</pre>
-
-> Operators to combine expressions are not currently supported: `-a`, `-o`.
-
-Sometimes you need to test the exit status of running one or more commands and for that, you use command substitutions. Just make sure to suppress stdout to avoid cluttering your `test` expression.
+To test whether a command succeeds, run it in a command substitution and compare `$status`. Keep the command quiet, or its output becomes part of the expression.
 
 ```fish
 @test "repo is clean" (git diff-index --quiet @) $status -eq 0
 ```
 
-Often you have work that needs to happen before and after tests run like preparing the environment and cleaning up after you're done. The best way to do this is directly in your test file.
+### Comparing output
+
+Wrap a command in `"$(...)"` to compare its whole output as one string, even when it's empty or spans several lines. To include standard error, redirect it inside the substitution: `"$(cmd 2>&1)"`.
 
 ```fish
-set temp (mktemp -d)
-
-cd $temp
-
-@test "a regular file" (touch file) -f file
-@test "nothing to see here" -z (read < file)
-
-rm -rf $temp
-```
-
-When comparing multiline output you usually have two options, collapse newlines using `echo` or collect your input into a single argument with [`string collect`](https://fishshell.com/docs/current/cmds/string-collect.html). It's your call.
-
-```fish
-@test "first six evens" (echo (seq 2 2 12)) = "2 4 6 8 10 12"
-
-@test "one two three" (seq 3 | string collect) = "1
+@test "counts to three" "$(seq 3)" = "1
 2
 3"
+
+@test "prints nothing" -z "$(true)"
 ```
 
-If you want to write to stdout while tests are running, use the `@echo` function. It's equivalent to `echo "# $argv"`, which prints a TAP comment.
+### Printing comments
+
+Print messages with `@echo`, not `echo`. `@echo` writes them as TAP comments, while plain `echo` output isn't valid TAP.
 
 ```fish
-@echo -- strings --
+@echo string tests
 ```
 
-## Reporting Options
+## Running tests
 
-If you're looking for something fancier than plaintext, [here's a list](https://github.com/sindresorhus/awesome-tap#reporters) of reporters that you can pipe TAP into.
+Fishtape runs test files one at a time, each in a new shell with temporary `HOME`, `TMPDIR` and XDG base directories. The shell doesn't load your configuration or installed plugins. Your working directory and other environment variables, like `PATH`, stay as they are.
+
+Fishtape cleans up each file's temporary directories when it's done, so tests can write to `$HOME` or `$TMPDIR` without cluttering your system.
+
+```fish
+cd $TMPDIR
+
+git init --quiet --initial-branch=main
+
+@test "shows the branch" "$(fish_git_prompt)" = " (main)"
+```
+
+Anything they write anywhere else, such as your working directory, is yours to remove.
+
+If a test file is missing, nothing runs and `fishtape` exits with status 1.
+
+## Testing a plugin
+
+Put the tests in your plugin's `tests` directory:
+
+```text
+ponyo
+├── completions
+│   └── ponyo.fish
+├── conf.d
+│   └── ponyo.fish
+├── functions
+│   └── ponyo.fish
+└── tests
+    └── ponyo.fish
+```
+
+Then run them with `fishtape` from anywhere:
 
 ```console
-$ fishtape test/* | tnyan
- 8   -_-_-_-__,------,
- 0   -_-_-_-__|  /\_/\
- 0   -_-_-_-_~|_( ^ .^)
-     -_-_-_-_ ""  ""
-  Pass!
+fishtape ~/ponyo/tests/*.fish
+```
+
+Before each test file runs, Fishtape adds your plugin's `functions` and `completions` directories to Fish's search paths and sources the files in its `conf.d`. It doesn't install the plugin, so Fisher's [events](https://github.com/jorgebucaran/fisher#event-system) don't fire. Emit the ones you need at the top of your test file:
+
+```fish
+emit ponyo_install
+```
+
+## Failures
+
+A test file fails when it doesn't run to the end: when it has a syntax error, calls `exit`, or gets killed. Fishtape reports it as a failed test and moves on to the next file.
+
+```console
+not ok 4 tests/ponyo.fish
+  ---
+    message: "exited with status 1 before the end of the file"
+  ...
+```
+
+If any test or file fails, `fishtape` exits with status 1.
+
+To stop a file early without failing it, use `return` instead of `exit`:
+
+```fish
+command --query kubectl || return
+```
+
+## Output
+
+Fishtape prints [TAP version 14](https://testanything.org/tap-version-14-specification.html). Read it as it is, or pipe it into any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters).
+
+```console
+fishtape tests/*.fish | tap-nyan
 ```
 
 ## License
