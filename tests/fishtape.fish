@@ -173,6 +173,14 @@ ok 1 keeps going
 # pass 1
 # ok'
 
+@test "ignores a sourced exit in an event handler" "$(fishtape source-event.fish)" = 'TAP version 14
+ok 1 before
+ok 2 after
+
+1..2
+# pass 2
+# ok'
+
 set output "$(fishtape return.fish)"
 @test "exits with 0 if a file returns early" $status -eq 0
 @test "passes a file that returns early" $output = 'TAP version 14
@@ -206,6 +214,17 @@ ok 4 two
 
 1..4
 # pass 3
+# fail 1'
+
+@test "fails a file that calls exit from an event handler" "$(fishtape exit-event.fish)" = 'TAP version 14
+ok 1 before
+not ok 2 exit-event.fish
+  ---
+    message: "exited with status 0 before the end of the file"
+  ...
+
+1..2
+# pass 1
 # fail 1'
 
 @test "fails a file with a syntax error before running it" "$(fishtape syntax-error.fish 2>/dev/null)" = 'TAP version 14

@@ -54,10 +54,11 @@ end
 
 set --query argv[1] || return 0
 
+set --global _fishtape_file $argv[1]
 set --global _fishtape_result $argv[2]
 
 begin
-    set --local plugin (path dirname (path dirname $argv[1]))
+    set --local plugin (path dirname (path dirname $_fishtape_file))
     set --prepend fish_function_path $plugin/functions
     set --prepend fish_complete_path $plugin/completions
 
@@ -127,12 +128,14 @@ end
 
 function exit
     set --local code $argv $status
-    set --local sources (LC_ALL=C status print-stack-trace | string match -- 'from sourcing file *')
-    set --query sources[2] || set --global _fishtape_exit
+    LC_ALL=C status print-stack-trace | string replace --filter -- 'from sourcing file ' '' | read --local file
+    test -z "$file" -o "$file" = $_fishtape_file && set --global _fishtape_exit
     builtin exit $code[1]
 end
 
-source $argv[1]
+source $_fishtape_file
+
 set --local code $status
 set --query _fishtape_exit || echo done >>$_fishtape_result
+
 builtin exit $code
