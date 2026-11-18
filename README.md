@@ -143,10 +143,10 @@ command --query kubectl || return 0
 
 ## Output
 
-Fishtape prints [TAP version 14](https://testanything.org/tap-version-14-specification.html). Read the output as it is, or pipe it into any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters).
+Fishtape prints [TAP version 14](https://testanything.org/tap-version-14-specification.html). Read the output as it is, or pipe it into a [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters).
 
 ```console
-fishtape tests/*.fish | tap-nyan
+fishtape tests/*.fish | tap-arc
 ```
 
 ## License
