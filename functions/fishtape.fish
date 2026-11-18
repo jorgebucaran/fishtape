@@ -3,10 +3,10 @@ function fishtape --description "A test runner for Fish"
         case -v --version
             echo "fishtape, version 3.0.1"
         case "" -h --help
-            echo "Usage: fishtape <files...>  Run test files"
+            echo "Usage: fishtape <file>...  Run test files"
             echo "Options:"
-            echo "       -v, --version  Print version"
-            echo "       -h, --help     Print this help message"
+            echo "       -v, --version       Display version"
+            echo "       -h, --help          Display help"
         case \*
             if set --local invalid (path filter --invert --type file -- $argv)
                 echo "fishtape: Not a file: \"$invalid[1]\"" >&2 && return 1
