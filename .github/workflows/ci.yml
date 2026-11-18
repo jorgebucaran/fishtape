@@ -1,22 +1,19 @@
 name: CI
 
-on: push
+on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    container: ${{ matrix.image }}
-
     strategy:
       matrix:
-        image:
-          - alpine:3.17
-          - alpine:3.20
-          - alpine:3.22
-          - alpine:edge
-
+        include:
+          - os: ubuntu-latest
+            install: sudo add-apt-repository --yes ppa:fish-shell/release-4 && sudo apt-get install --yes fish
+          - os: macos-latest
+            install: brew install fish
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - run: apk add --no-cache fish
+      - uses: actions/checkout@v7
+      - run: ${{ matrix.install }}
       - run: source functions/fishtape.fish && fishtape tests/*.fish
         shell: fish {0}
