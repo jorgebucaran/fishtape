@@ -29,6 +29,7 @@ function fishtape --description "A test runner for Fish"
                         $fish_path (status filename) (path resolve -- $file) $temp/result
 
                 set --local code $status
+                test -e $temp/result || return 130
                 read --line total failed done <$temp/result
                 command rm -rf $temp
 
@@ -56,6 +57,12 @@ set --query argv[1] || return 0
 
 set --global _fishtape_file $argv[1]
 set --global _fishtape_result $argv[2]
+
+function _fishtape_sigint --on-signal SIGINT
+    command rm -rf (path dirname $_fishtape_result)
+    functions --erase _fishtape_sigint
+    command kill -INT $fish_pid
+end
 
 begin
     set --local plugin (path dirname (path dirname $_fishtape_file))

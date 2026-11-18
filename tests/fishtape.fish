@@ -88,6 +88,16 @@ set directories (string match -- /\* $output)
     (path sort --unique $directories | count) -eq 14
 @test "removes each test file's temporary directories" -z "$(path filter $directories)"
 
+set output "$(fishtape sigint.fish passing.fish)"
+@test "exits with status 130 on Ctrl-C" $status -eq 130
+@test "stops the run on Ctrl-C" $output = "\
+TAP version 14
+ok 1 before"
+
+@test "stops the run on Ctrl-C in a sourced file" "$(fishtape sigint-source.fish passing.fish)" = "\
+TAP version 14
+ok 1 before"
+
 @test "leaves the working directory and other environment variables as they are" \
     "$(EDITOR=vim fishtape environment.fish)" = "\
 TAP version 14
