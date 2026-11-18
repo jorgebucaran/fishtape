@@ -3,25 +3,28 @@ cd (path resolve (status dirname)/fixtures)
 
 @echo Arguments
 
-@test "prints usage with --help" (fishtape --help | string match --quiet -- 'Usage: fishtape *') $status -eq 0
-@test "prints usage with -h" "$(fishtape -h)" = "$(fishtape --help)"
-@test "prints the version with --version" (fishtape --version | string match --quiet -- 'fishtape, version *.*.*') $status -eq 0
-@test "prints the version with -v" "$(fishtape -v)" = "$(fishtape --version)"
+@test "fishtape --help displays the help" (fishtape --help | string match --quiet -- 'Usage: fishtape *') $status -eq 0
+@test "fishtape -h is short for --help" "$(fishtape -h)" = "$(fishtape --help)"
+@test "fishtape --version displays the version" \
+    (fishtape --version | string match --quiet -- 'fishtape, version *.*.*') $status -eq 0
+@test "fishtape -v is short for --version" "$(fishtape -v)" = "$(fishtape --version)"
 
 set output "$(fishtape passing.fish missing.fish 2>/dev/null)"
-@test "exits with 1 if a file is missing" $status -eq 1
-@test "runs nothing if a file is missing" -z "$output"
+@test "exits with status 1 if a test file is missing" $status -eq 1
+@test "runs nothing if a test file is missing" -z "$output"
 
 @echo "Running tests"
 
 set output (fishtape shell.fish shell.fish)
-@test "runs each file in a new shell" $status -eq 0
+@test "runs each test file in a new shell" $status -eq 0
 
 set directories (string match -- /\* $output)
-@test "gives each file its own HOME, TMPDIR and XDG directories" (path sort --unique $directories | count) -eq 14
-@test "cleans up the temporary directories" -z "$(path filter $directories)"
+@test "gives each test file its own temporary HOME, TMPDIR and XDG base directories" \
+    (path sort --unique $directories | count) -eq 14
+@test "removes each test file's temporary directories" -z "$(path filter $directories)"
 
-@test "keeps the working directory and environment variables" "$(EDITOR=vim fishtape environment.fish)" = 'TAP version 14
+@test "leaves the working directory and other environment variables as they are" \
+    "$(EDITOR=vim fishtape environment.fish)" = 'TAP version 14
 # PWD='$PWD'
 # EDITOR=vim
 
@@ -70,7 +73,8 @@ not ok 3 runs as root
 # pass 2
 # fail 1'
 
-@test "reports the expression for anything but a comparison" "$(fishtape expressions.fish 2>/dev/null)" = 'TAP version 14
+@test "reports the expression for anything but a comparison" \
+    "$(fishtape expressions.fish 2>/dev/null)" = 'TAP version 14
 not ok 1 a directory
   ---
     expression: "-d /nonexistent"
@@ -109,7 +113,7 @@ not ok 7 one argument
 # pass 1
 # fail 6'
 
-@test "prints @echo as a comment and echo as is" "$(fishtape comments.fish)" = 'TAP version 14
+@test "prints @echo as a TAP comment and plain echo as is" "$(fishtape comments.fish)" = 'TAP version 14
 # comments
 comments
 ok 1 passes
@@ -182,15 +186,15 @@ ok 2 after
 # ok'
 
 set output "$(fishtape return.fish)"
-@test "exits with 0 if a file returns early" $status -eq 0
-@test "passes a file that returns early" $output = 'TAP version 14
+@test "exits with status 0 if a test file returns early" $status -eq 0
+@test "passes a test file that returns early" $output = 'TAP version 14
 ok 1 before
 
 1..1
 # pass 1
 # ok'
 
-@test "fails a file that ends with a nonzero status" "$(fishtape status.fish)" = 'TAP version 14
+@test "fails a test file that ends with a nonzero status" "$(fishtape status.fish)" = 'TAP version 14
 ok 1 before
 not ok 2 status.fish
   ---
@@ -202,8 +206,8 @@ not ok 2 status.fish
 # fail 1'
 
 set output "$(fishtape exit.fish passing.fish)"
-@test "exits with 1 if a file calls exit" $status -eq 1
-@test "fails a file that calls exit and moves on to the next file" $output = 'TAP version 14
+@test "exits with status 1 if a test file calls exit" $status -eq 1
+@test "fails a test file that calls exit and moves on to the next test file" $output = 'TAP version 14
 ok 1 before
 not ok 2 exit.fish
   ---
@@ -216,7 +220,7 @@ ok 4 two
 # pass 3
 # fail 1'
 
-@test "fails a file that calls exit from an event handler" "$(fishtape exit-event.fish)" = 'TAP version 14
+@test "fails a test file that calls exit from an event handler" "$(fishtape exit-event.fish)" = 'TAP version 14
 ok 1 before
 not ok 2 exit-event.fish
   ---
@@ -227,7 +231,8 @@ not ok 2 exit-event.fish
 # pass 1
 # fail 1'
 
-@test "fails a file with a syntax error before running it" "$(fishtape syntax-error.fish 2>/dev/null)" = 'TAP version 14
+@test "fails a test file with a syntax error before running it" \
+    "$(fishtape syntax-error.fish 2>/dev/null)" = 'TAP version 14
 not ok 1 syntax-error.fish
   ---
     message: "exited with status 127 before the end of the file"
@@ -237,7 +242,7 @@ not ok 1 syntax-error.fish
 # pass 0
 # fail 1'
 
-@test "fails a file that gets killed" "$(fishtape kill.fish)" = 'TAP version 14
+@test "fails a test file that gets killed" "$(fishtape kill.fish)" = 'TAP version 14
 ok 1 before
 not ok 2 kill.fish
   ---
@@ -250,11 +255,11 @@ not ok 2 kill.fish
 
 @echo "The whole run"
 
-@test "exits with 1 if a test fails" (fishtape example.fish >/dev/null) $status -eq 1
+@test "exits with status 1 if a test fails" (fishtape example.fish >/dev/null) $status -eq 1
 
 set output "$(fishtape passing.fish passing.fish)"
-@test "exits with 0 if every test passes" $status -eq 0
-@test "numbers tests across files" $output = 'TAP version 14
+@test "exits with status 0 if all the tests pass" $status -eq 0
+@test "numbers tests across test files" $output = 'TAP version 14
 ok 1 one
 ok 2 two
 ok 3 one

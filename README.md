@@ -82,7 +82,7 @@ Print messages with `@echo`, not `echo`. `@echo` writes them as TAP comments, wh
 
 Fishtape runs test files one at a time, each in a new shell with temporary `HOME`, `TMPDIR` and XDG base directories. The shell doesn't load your configuration or installed plugins. Your working directory and other environment variables, like `PATH`, stay as they are.
 
-Fishtape removes each file's temporary directories after the file runs, so tests can write to `$HOME` or `$TMPDIR` without cluttering your system.
+Fishtape removes each test file's temporary directories after the file runs, so tests can write to `$HOME` or `$TMPDIR` without cluttering your system.
 
 ```fish
 cd $TMPDIR
