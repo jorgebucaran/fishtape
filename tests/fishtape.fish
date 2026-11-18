@@ -82,7 +82,6 @@ ok 1 passes
 
 set output (fishtape shell.fish shell.fish)
 @test "runs each test file in a new shell" $status -eq 0
-
 set directories (string match -- /\* $output)
 @test "gives each test file its own temporary HOME, TMPDIR and XDG base directories" \
     (path sort --unique $directories | count) -eq 14

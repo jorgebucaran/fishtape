@@ -30,6 +30,7 @@ function fishtape --description "A test runner for Fish"
 
                 set --local code $status
                 test -e $temp/result || return 130
+
                 read --line total failed done <$temp/result
                 command rm -rf $temp
 
@@ -79,12 +80,13 @@ function @echo
 end
 
 function @test --argument-names description
+    set description (string replace --all --regex -- '[\\\\#]' '\\\\$0' $description)
     set --erase argv[1]
     set --local expression (string escape -- $argv)
     set --query argv[2] || set --append argv "" # emulates test-require-arg
+
     read --line --local total failed <$_fishtape_result
     set total (math $total + 1)
-    set description (string replace --all --regex -- '[\\\\#]' '\\\\$0' $description)
 
     if test $argv
         echo "ok $total $description"
