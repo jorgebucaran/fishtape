@@ -54,7 +54,7 @@ function fishtape --description "A test runner for Fish"
     end
 end
 
-set --query argv[1] || return 0
+set --query argv[1] || exit 0
 
 set --global _fishtape_file $argv[1]
 set --global _fishtape_result $argv[2]
